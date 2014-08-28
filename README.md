@@ -1,0 +1,131 @@
+nextcaller-python-api
+=====================
+
+A Python wrapper around the Nextcaller API.
+The library supports python2.6+.
+
+Installation
+------------
+
+Dependencies:
+
+* requests
+
+Installation:
+
+cloning from the GitHub repo:
+
+    $ git clone git://github.com/nextcaller/Nextcaller-python-api.git
+    $ cd nextcaller-python-api
+    $ python setup.py test
+    $ python setup.py build
+    $ python setup.py install
+
+use pip from the GitHub repo:
+    
+    $ pip install -U --user git+git://github.com/nextcaller/nextcaller-python-api.git
+
+use pip from pypi:
+
+    $ pip install -U --user pynextcaller
+
+
+Example
+-------
+
+    oauth_key = "XXXXX"
+    oauth_secret = "XXXXX"
+    phone_number = "121212..."
+    from pynextcaller.client import Client
+    client = OauthClient(oauth_key, oauth_secret)
+    resp = client.Phone(phone_number)
+    print resp
+
+ or
+
+    client = BasicAuthClient(oauth_key, oauth_secret)
+    resp = client.Phone(phone_number)
+    print resp
+
+
+Client
+-------------
+
+    oauth_key = "XXXXX"
+    oauth_secret = "XXXXX"
+    from pynextcaller.client import Client
+    client = BasicAuthClient(oauth_key, oauth_secret)
+    client = OauthClient(oauth_key, oauth_secret)
+
+    Parameters:
+
+    oauth_key - api key
+    oauth_secret - api secret
+
+
+API Items
+-------------
+
+### Get profile by phone ###
+
+    res = client.Phone(number, extended=False, response_format='json', handler=None)
+    
+    Parameters:
+    
+    number - phone number
+    extended - [True|False] - use extended profile output
+    response_format - [json|xml] - required response format
+    handler - [None] - function, response handler.
+    Arguments of the handler function - (response, response_format) 
+
+### Get profile by id ###
+
+    res = client.Profile(profile_id, extended=False, response_format='json', handler=None)
+    
+    Parameters:
+    
+    profile_id - id of a profile
+    extended - [True|False] - use extended profile output
+    response_format - [json|xml] - required response format
+    handler - [None] - function, response handler.
+    Arguments of the handler function - (response, response_format) 
+
+
+### Update profile ###
+
+    res = client.Profile.update(profile_id, data, handler=None)
+    
+    Parameters:
+    
+    profile_id - id of a profile
+    data - data to update
+    handler - [None] - function, response handler.
+    Arguments of the handler function - (response, response_format) 
+
+    Example:
+    profile_id = "XXXXXXXXX" 
+    data = {
+        "email": "test@test.com"
+    }
+    handler = lambda response, response_format: response
+    client.Profile.update(profile_id, data, handler)
+    
+
+Notes
+------
+
+It is possible to override the default response handler by passing
+a handler function as the keyword argument. For example:
+
+    func = lambda x, y: (x, x, y)
+    result = client.Phone.get(number, handler=func)
+
+Default handler for response_format='json':
+    
+    def handler(response, response_format):
+        return json.loads(response)
+
+Default handler for response_format='xml': 
+    
+    def handler(response, response_format):
+        return xml.dom.minidom.parseString(response)
