@@ -99,92 +99,40 @@ PHONE_XML_RESULT_EXAMPLE = '''
 
 class PhoneTestCase(BaseTestCase):
 
-    def test_phone_json_request_oauth(self):
+    def test_phone_json_request(self):
         phone = '2125558383'
         method = 'GET'
         url_params = {
             'phone': phone,
-            'format': 'json',
-            'extended': 'true'
+            'format': 'json'
         }
         url = Item.prepare_url('records', url_params)
-        phone_res = self.oauth_client.Phone
+        phone_res = self.client.Phone
         obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.oauth_client.auth, url, method=method, debug=False)
+        obj(self.client.auth, url, method=method, debug=False)
         self.mocker.result(PHONE_JSON_RESULT_EXAMPLE)
         self.mocker.replay()
-        res = phone_res.get(phone, extended=True)
+        res = phone_res.get(phone)
         self.assertTrue(res['records'])
         self.assertEqual(res['records'][0]['email'], 'demo@nextcaller.com')
         self.assertEqual(res['records'][0]['first_name'], 'Jerry')
         self.assertEqual(res['records'][0]['last_name'], 'Seinfeld')
         self.mocker.verify()
 
-    def test_phone_json_request_basic(self):
+    def test_phone_xml_request(self):
         phone = '2125558383'
         method = 'GET'
         url_params = {
             'phone': phone,
-            'format': 'json',
-            'extended': 'true'
+            'format': 'xml'
         }
         url = Item.prepare_url('records', url_params)
-        phone_res = self.basic_client.Phone
+        phone_res = self.client.Phone
         obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.basic_client.auth, url, method=method, debug=False)
-        self.mocker.result(PHONE_JSON_RESULT_EXAMPLE)
-        self.mocker.replay()
-        res = phone_res.get(phone, extended=True)
-        self.assertTrue(res['records'])
-        self.assertEqual(res['records'][0]['email'], 'demo@nextcaller.com')
-        self.assertEqual(res['records'][0]['first_name'], 'Jerry')
-        self.assertEqual(res['records'][0]['last_name'], 'Seinfeld')
-        self.mocker.verify()
-
-    def test_phone_xml_request_oauth(self):
-        phone = '2125558383'
-        method = 'GET'
-        url_params = {
-            'phone': phone,
-            'format': 'xml',
-            'extended': 'true'
-        }
-        url = Item.prepare_url('records', url_params)
-        phone_res = self.oauth_client.Phone
-        obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.oauth_client.auth, url, method=method, debug=False)
+        obj(self.client.auth, url, method=method, debug=False)
         self.mocker.result(PHONE_XML_RESULT_EXAMPLE)
         self.mocker.replay()
-        res = phone_res.get(phone, response_format='xml', extended=True)
-        record = res.getElementsByTagName('response')[0].\
-            getElementsByTagName('records')[0]
-        self.assertTrue(record)
-        self.assertEqual(
-            record.getElementsByTagName('email')[0].firstChild.nodeValue,
-            'demo@nextcaller.com')
-        self.assertEqual(
-            record.getElementsByTagName('first_name')[0].firstChild.nodeValue,
-            'Jerry')
-        self.assertEqual(
-            record.getElementsByTagName('last_name')[0].firstChild.nodeValue,
-            'Seinfeld')
-        self.mocker.verify()
-
-    def test_phone_xml_request_basic(self):
-        phone = '2125558383'
-        method = 'GET'
-        url_params = {
-            'phone': phone,
-            'format': 'xml',
-            'extended': 'true'
-        }
-        url = Item.prepare_url('records', url_params)
-        phone_res = self.basic_client.Phone
-        obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.basic_client.auth, url, method=method, debug=False)
-        self.mocker.result(PHONE_XML_RESULT_EXAMPLE)
-        self.mocker.replay()
-        res = phone_res.get(phone, response_format='xml', extended=True)
+        res = phone_res.get(phone, response_format='xml')
         record = res.getElementsByTagName('response')[0].\
             getElementsByTagName('records')[0]
         self.assertTrue(record)

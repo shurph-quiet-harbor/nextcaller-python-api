@@ -13,21 +13,18 @@ class Phone(Item):
     Get information by phone
     """
 
-    def __call__(self, phone, extended=False,
-                 response_format=JSON_RESPONSE_FORMAT,
+    def __call__(self, phone, response_format=JSON_RESPONSE_FORMAT,
                  debug=False, handler=None):
         """
-        Allowed parameters are phone, extended, format
+        Allowed parameters are phone, format, debug, handler
         res = client.Phone(1221222122)
         Handler - custom function that takes response and response_format
         arguments
         """
-        return self.get(
-            phone, extended=extended, response_format=response_format,
-            debug=debug, handler=handler)
+        return self.get(phone, response_format=response_format,
+                        debug=debug, handler=handler)
 
-    def get(self, phone, extended=False,
-            response_format=JSON_RESPONSE_FORMAT,
+    def get(self, phone, response_format=JSON_RESPONSE_FORMAT,
             debug=False, handler=None):
         method = 'GET'
         self.sanitize_format(response_format)
@@ -36,8 +33,6 @@ class Phone(Item):
             'phone': phone,
             'format': response_format,
         }
-        if extended:
-            url_params['extended'] = 'true'
         url = self.prepare_url('records', url_params=url_params)
         response = make_http_request(
             self.client.auth, url, method=method, debug=debug)

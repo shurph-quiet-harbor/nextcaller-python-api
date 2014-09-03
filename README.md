@@ -1,6 +1,8 @@
 nextcaller-python-api
 =====================
 
+[![Build Status](https://travis-ci.org/Nextcaller/nextcaller-python-api.svg?branch=master)](https://travis-ci.org/Nextcaller/nextcaller-python-api)
+
 A Python wrapper around the Nextcaller API.
 The library supports python2.6+.
 
@@ -33,17 +35,11 @@ use pip from pypi:
 Example
 -------
 
-    oauth_key = "XXXXX"
-    oauth_secret = "XXXXX"
+    api_key = "XXXXX"
+    api_secret = "XXXXX"
     phone_number = "121212..."
     from pynextcaller.client import Client
-    client = OauthClient(oauth_key, oauth_secret)
-    resp = client.Phone(phone_number)
-    print resp
-
- or
-
-    client = BasicAuthClient(oauth_key, oauth_secret)
+    client = Client(api_key, api_secret)
     resp = client.Phone(phone_number)
     print resp
 
@@ -51,16 +47,15 @@ Example
 Client
 -------------
 
-    oauth_key = "XXXXX"
-    oauth_secret = "XXXXX"
+    api_key = "XXXXX"
+    api_secret = "XXXXX"
     from pynextcaller.client import Client
-    client = BasicAuthClient(oauth_key, oauth_secret)
-    client = OauthClient(oauth_key, oauth_secret)
+    client = Client(api_key, api_secret)
 
     Parameters:
 
-    oauth_key - api key
-    oauth_secret - api secret
+    api_key - api key
+    api_secret - api secret
 
 
 API Items
@@ -68,24 +63,22 @@ API Items
 
 ### Get profile by phone ###
 
-    res = client.Phone(number, extended=False, response_format='json', handler=None)
+    res = client.Phone(number, response_format='json', handler=None)
     
     Parameters:
     
     number - phone number
-    extended - [True|False] - use extended profile output
     response_format - [json|xml] - required response format
     handler - [None] - function, response handler.
     Arguments of the handler function - (response, response_format) 
 
 ### Get profile by id ###
 
-    res = client.Profile(profile_id, extended=False, response_format='json', handler=None)
+    res = client.Profile(profile_id, response_format='json', handler=None)
     
     Parameters:
     
     profile_id - id of a profile
-    extended - [True|False] - use extended profile output
     response_format - [json|xml] - required response format
     handler - [None] - function, response handler.
     Arguments of the handler function - (response, response_format) 

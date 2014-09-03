@@ -3,8 +3,6 @@ import json
 import logging
 from pynextcaller.constants import *
 from pynextcaller.exceptions import *
-from pynextcaller.auth import get_basic_authorization_headers, \
-    get_oauth_authorization_headers
 
 
 __all__ = (
@@ -74,8 +72,8 @@ def api_request(
         raise ConnectionException(err)
 
 
-def build_headers(auth, url, method='get', user_agent=None, content_type=None):
-    headers = auth(url, method=method)
+def build_headers(auth, user_agent=None, content_type=None):
+    headers = auth.get_headers()
     headers['Connection'] = 'Keep-Alive'
     if content_type is not None:
         headers['ContentType'] = content_type
@@ -91,8 +89,7 @@ def make_http_request(auth, url, data=None, method='GET', user_agent=None,
     if user_agent is None:
         user_agent = DEFAULT_USER_AGENT
     headers = build_headers(
-        auth, url, method=method, user_agent=user_agent,
-        content_type=content_type)
+        auth, user_agent=user_agent, content_type=content_type)
     requests_kwargs = {
         'method': method,
         'headers': headers,

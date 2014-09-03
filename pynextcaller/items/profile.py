@@ -13,8 +13,7 @@ class Profile(Item):
     Update profile information
     """
 
-    def __call__(self, profile_id, extended=False,
-                 response_format=JSON_RESPONSE_FORMAT,
+    def __call__(self, profile_id, response_format=JSON_RESPONSE_FORMAT,
                  debug=False, handler=None):
         """
         Allowed parameter is profile_id, data:
@@ -24,19 +23,15 @@ class Profile(Item):
         }
         res = client.Profile(profile_id, data=data)
         """
-        return self.get(
-            profile_id, extended=extended, response_format=response_format,
-            debug=debug, handler=handler)
+        return self.get(profile_id, response_format=response_format,
+                        debug=debug, handler=handler)
 
-    def get(self, profile_id, extended=False,
-            response_format=JSON_RESPONSE_FORMAT,
+    def get(self, profile_id, response_format=JSON_RESPONSE_FORMAT,
             debug=False, handler=None):
         method = 'GET'
         url_params = {
             'format': response_format
         }
-        if extended:
-            url_params['extended'] = 'true'
         url = self.prepare_url('users/%s/' % profile_id, url_params=url_params)
         response = make_http_request(
             self.client.auth, url, method=method, debug=debug)

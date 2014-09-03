@@ -107,58 +107,37 @@ PROFILE_XML_RESULT_EXAMPLE = '''
 
 class ProfileTestCase(BaseTestCase):
 
-    def test_profile_get_json_request_oauth(self):
+    def test_profile_get_json_request(self):
         profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
         method = 'GET'
         url_params = {
-            'format': 'json',
-            'extended': 'true'
+            'format': 'json'
         }
         url = Item.prepare_url('users/%s/' % profile_id, url_params)
-        profile_res = self.oauth_client.Profile
+        profile_res = self.client.Profile
         obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.oauth_client.auth, url, method=method, debug=False)
+        obj(self.client.auth, url, method=method, debug=False)
         self.mocker.result(PROFILE_JSON_RESULT_EXAMPLE)
         self.mocker.replay()
-        res = profile_res(profile_id, extended=True)
+        res = profile_res(profile_id)
         self.assertEqual(res['email'], 'demo@nextcaller.com')
         self.assertEqual(res['first_name'], 'Jerry')
         self.assertEqual(res['last_name'], 'Seinfeld')
         self.mocker.verify()
 
-    def test_profile_get_json_request_basic(self):
+    def test_profile_get_xml_request(self):
         profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
         method = 'GET'
         url_params = {
-            'format': 'json',
-            'extended': 'true'
+            'format': 'xml'
         }
         url = Item.prepare_url('users/%s/' % profile_id, url_params)
-        profile_res = self.basic_client.Profile
+        profile_res = self.client.Profile
         obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.basic_client.auth, url, method=method, debug=False)
-        self.mocker.result(PROFILE_JSON_RESULT_EXAMPLE)
-        self.mocker.replay()
-        res = profile_res(profile_id, extended=True)
-        self.assertEqual(res['email'], 'demo@nextcaller.com')
-        self.assertEqual(res['first_name'], 'Jerry')
-        self.assertEqual(res['last_name'], 'Seinfeld')
-        self.mocker.verify()
-
-    def test_profile_get_xml_request_oauth(self):
-        profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
-        method = 'GET'
-        url_params = {
-            'format': 'xml',
-            'extended': 'true'
-        }
-        url = Item.prepare_url('users/%s/' % profile_id, url_params)
-        profile_res = self.oauth_client.Profile
-        obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.oauth_client.auth, url, method=method, debug=False)
+        obj(self.client.auth, url, method=method, debug=False)
         self.mocker.result(PROFILE_XML_RESULT_EXAMPLE)
         self.mocker.replay()
-        res = profile_res(profile_id, extended=True, response_format='xml')
+        res = profile_res(profile_id, response_format='xml')
         self.assertEqual(
             res.getElementsByTagName('email')[0].firstChild.nodeValue,
             'demo@nextcaller.com')
@@ -170,59 +149,16 @@ class ProfileTestCase(BaseTestCase):
             'Seinfeld')
         self.mocker.verify()
 
-    def test_profile_get_xml_request_basic(self):
-        profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
-        method = 'GET'
-        url_params = {
-            'format': 'xml',
-            'extended': 'true'
-        }
-        url = Item.prepare_url('users/%s/' % profile_id, url_params)
-        profile_res = self.basic_client.Profile
-        obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.basic_client.auth, url, method=method, debug=False)
-        self.mocker.result(PROFILE_XML_RESULT_EXAMPLE)
-        self.mocker.replay()
-        res = profile_res(profile_id, extended=True, response_format='xml')
-        self.assertEqual(
-            res.getElementsByTagName('email')[0].firstChild.nodeValue,
-            'demo@nextcaller.com')
-        self.assertEqual(
-            res.getElementsByTagName('first_name')[0].firstChild.nodeValue,
-            'Jerry')
-        self.assertEqual(
-            res.getElementsByTagName('last_name')[0].firstChild.nodeValue,
-            'Seinfeld')
-        self.mocker.verify()
-
-    def test_profile_update_json_request_oauth(self):
+    def test_profile_update_json_request(self):
         profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
         method = 'POST'
         url_params = {
             'format': 'json'
         }
         url = Item.prepare_url('users/%s/' % profile_id, url_params)
-        profile_res = self.oauth_client.Profile
+        profile_res = self.client.Profile
         obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.oauth_client.auth, url,
-            data=json.dumps(PROFILE_JSON_REQUEST_EXAMPLE), method=method,
-            content_type=JSON_CONTENT_TYPE, debug=False)
-        self.mocker.result(self.fake_response)
-        self.mocker.replay()
-        res = profile_res.update(profile_id, data=PROFILE_JSON_REQUEST_EXAMPLE)
-        self.assertEqual(res.status_code, 204)
-        self.mocker.verify()
-
-    def test_profile_update_json_request_basic(self):
-        profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
-        method = 'POST'
-        url_params = {
-            'format': 'json'
-        }
-        url = Item.prepare_url('users/%s/' % profile_id, url_params)
-        profile_res = self.basic_client.Profile
-        obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.basic_client.auth, url,
+        obj(self.client.auth, url,
             data=json.dumps(PROFILE_JSON_REQUEST_EXAMPLE), method=method,
             content_type=JSON_CONTENT_TYPE, debug=False)
         self.mocker.result(self.fake_response)
