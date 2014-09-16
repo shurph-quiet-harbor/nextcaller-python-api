@@ -40,7 +40,7 @@ Example
     phone_number = "121212..."
     from pynextcaller.client import Client
     client = Client(api_key, api_secret)
-    resp = client.Phone(phone_number)
+    resp = client.get_by_phone(phone_number)
     print resp
 
 
@@ -63,7 +63,7 @@ API Items
 
 ### Get profile by phone ###
 
-    res = client.Phone.get(number, response_format='json', handler=None)
+    res = client.get_by_phone(number, response_format='json', handler=None)
     
 **Parameters**:
     
@@ -74,7 +74,7 @@ API Items
 
 ### Get profile by id ###
 
-    res = client.Profile.get(profile_id, response_format='json', handler=None)
+    res = client.get_by_profile_id(profile_id, response_format='json', handler=None)
     
 **Parameters**:
     
@@ -84,9 +84,9 @@ API Items
     Arguments of the handler function - (response, response_format) 
 
 
-### Update profile ###
+### Update profile by id ###
 
-    res = client.Profile.update(profile_id, data, handler=None)
+    res = client.update_by_profile_id(profile_id, data, handler=None)
     
 **Parameters**:
 
@@ -102,7 +102,7 @@ API Items
         "email": "test@test.com"
     }
     handler = lambda response, response_format: response
-    client.Profile.update(profile_id, data, handler)
+    client.update_by_profile_id(profile_id, data, handler)
 
 **Response**:
 
@@ -116,14 +116,14 @@ It is possible to override the default response handler by passing
 a handler function as the keyword argument. For example:
 
     func = lambda x, y: (x, x, y)
-    result = client.Phone.get(number, handler=func)
+    result = client.get_by_phone(number, handler=func)
 
-Default handler for Phone.get and Profile.get methods and response_format='json':
+Default handler for PhoneItem.get and ProfileItem.get methods and response_format='json':
     
     def handler(response, response_format):
         return json.loads(response)
 
-Default handler for Phone.get and Profile.get methods and response_format='xml': 
+Default handler for PhoneItem.get and ProfileItem.get methods and response_format='xml': 
     
     def handler(response, response_format):
         return xml.dom.minidom.parseString(response)

@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 __author__ = 'Igor Nemilentsev'
 __author_email__ = 'trezorg@gmail.com'
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 
 def read(*names, **kwargs):
@@ -30,7 +30,7 @@ setup(
     include_package_data=True,
     install_requires=['requests'],
     test_suite='nose.collector',
-    tests_require=['nose', 'mocker'],
+    tests_require=['nose', 'mock'],
     setup_requires=['nose'],
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -39,8 +39,5 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Communications',
         'Topic :: Internet',
-    ],
-    dependency_links=[
-        "git+https://github.com/trezorg/mocker.git#egg=mocker",
     ],
 )

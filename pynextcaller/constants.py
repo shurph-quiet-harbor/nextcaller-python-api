@@ -9,4 +9,3 @@ JSON_CONTENT_TYPE = 'application/json; charset=utf-8'
 
 # urls
 BASE_URL = 'https://api.nextcaller.com/v2/'
-BASE_URL = 'http://api.demo.nextcaller.com/v2/'

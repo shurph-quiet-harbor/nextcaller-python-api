@@ -1,8 +1,5 @@
 import unittest
-import json
 from pynextcaller.tests.base import BaseTestCase
-from pynextcaller.items import Item
-from pynextcaller.constants import *
 
 
 PROFILE_JSON_REQUEST_EXAMPLE = {
@@ -109,35 +106,16 @@ class ProfileTestCase(BaseTestCase):
 
     def test_profile_get_json_request(self):
         profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
-        method = 'GET'
-        url_params = {
-            'format': 'json'
-        }
-        url = Item.prepare_url('users/%s/' % profile_id, url_params)
-        profile_res = self.client.Profile
-        obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.client.auth, url, method=method, debug=False)
-        self.mocker.result(PROFILE_JSON_RESULT_EXAMPLE)
-        self.mocker.replay()
-        res = profile_res(profile_id)
+        self.patch_http_request(PROFILE_JSON_RESULT_EXAMPLE)
+        res = self.client.get_by_profile_id(profile_id)
         self.assertEqual(res['email'], 'demo@nextcaller.com')
         self.assertEqual(res['first_name'], 'Jerry')
         self.assertEqual(res['last_name'], 'Seinfeld')
-        self.mocker.verify()
 
     def test_profile_get_xml_request(self):
         profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
-        method = 'GET'
-        url_params = {
-            'format': 'xml'
-        }
-        url = Item.prepare_url('users/%s/' % profile_id, url_params)
-        profile_res = self.client.Profile
-        obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.client.auth, url, method=method, debug=False)
-        self.mocker.result(PROFILE_XML_RESULT_EXAMPLE)
-        self.mocker.replay()
-        res = profile_res(profile_id, response_format='xml')
+        self.patch_http_request(PROFILE_XML_RESULT_EXAMPLE)
+        res = self.client.get_by_profile_id(profile_id, response_format='xml')
         self.assertEqual(
             res.getElementsByTagName('email')[0].firstChild.nodeValue,
             'demo@nextcaller.com')
@@ -147,25 +125,13 @@ class ProfileTestCase(BaseTestCase):
         self.assertEqual(
             res.getElementsByTagName('last_name')[0].firstChild.nodeValue,
             'Seinfeld')
-        self.mocker.verify()
 
     def test_profile_update_json_request(self):
         profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
-        method = 'POST'
-        url_params = {
-            'format': 'json'
-        }
-        url = Item.prepare_url('users/%s/' % profile_id, url_params)
-        profile_res = self.client.Profile
-        obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.client.auth, url,
-            data=json.dumps(PROFILE_JSON_REQUEST_EXAMPLE), method=method,
-            content_type=JSON_CONTENT_TYPE, debug=False)
-        self.mocker.result(self.fake_response)
-        self.mocker.replay()
-        res = profile_res.update(profile_id, data=PROFILE_JSON_REQUEST_EXAMPLE)
+        self.patch_http_request(self.fake_response)
+        res = self.client.update_by_profile_id(
+            profile_id, data=PROFILE_JSON_REQUEST_EXAMPLE)
         self.assertEqual(res.status_code, 204)
-        self.mocker.verify()
 
 
 if __name__ == '__main__':

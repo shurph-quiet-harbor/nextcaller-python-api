@@ -1,6 +1,9 @@
 import unittest
+try:
+    from unittest import mock
+except ImportError:
+    import mock
 from pynextcaller.tests.base import BaseTestCase
-from pynextcaller.items import Item
 
 
 PHONE_JSON_RESULT_EXAMPLE = '''
@@ -99,40 +102,19 @@ PHONE_XML_RESULT_EXAMPLE = '''
 
 class PhoneTestCase(BaseTestCase):
 
-    def test_phone_json_request(self):
+    def test_by_phone_json_request(self):
         phone = '2125558383'
-        method = 'GET'
-        url_params = {
-            'phone': phone,
-            'format': 'json'
-        }
-        url = Item.prepare_url('records', url_params)
-        phone_res = self.client.Phone
-        obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.client.auth, url, method=method, debug=False)
-        self.mocker.result(PHONE_JSON_RESULT_EXAMPLE)
-        self.mocker.replay()
-        res = phone_res.get(phone)
+        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
+        res = self.client.get_by_phone(phone)
         self.assertTrue(res['records'])
         self.assertEqual(res['records'][0]['email'], 'demo@nextcaller.com')
         self.assertEqual(res['records'][0]['first_name'], 'Jerry')
         self.assertEqual(res['records'][0]['last_name'], 'Seinfeld')
-        self.mocker.verify()
 
     def test_phone_xml_request(self):
         phone = '2125558383'
-        method = 'GET'
-        url_params = {
-            'phone': phone,
-            'format': 'xml'
-        }
-        url = Item.prepare_url('records', url_params)
-        phone_res = self.client.Phone
-        obj = self.mocker.replace('pynextcaller.transport.make_http_request')
-        obj(self.client.auth, url, method=method, debug=False)
-        self.mocker.result(PHONE_XML_RESULT_EXAMPLE)
-        self.mocker.replay()
-        res = phone_res.get(phone, response_format='xml')
+        self.patch_http_request(PHONE_XML_RESULT_EXAMPLE)
+        res = self.client.get_by_phone(phone, response_format='xml')
         record = res.getElementsByTagName('response')[0].\
             getElementsByTagName('records')[0]
         self.assertTrue(record)
@@ -145,8 +127,6 @@ class PhoneTestCase(BaseTestCase):
         self.assertEqual(
             record.getElementsByTagName('last_name')[0].firstChild.nodeValue,
             'Seinfeld')
-        self.mocker.verify()
-
 
 if __name__ == '__main__':
     unittest.main()
