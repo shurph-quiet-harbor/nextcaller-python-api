@@ -9,13 +9,13 @@ The library supports python2.6+.
 Installation
 ------------
 
-Dependencies:
+**Dependencies**:
 
 * requests
 
-Installation:
+**Installation**:
 
-cloning from the GitHub repo:
+*cloning from the GitHub repo*:
 
     $ git clone git://github.com/nextcaller/Nextcaller-python-api.git
     $ cd nextcaller-python-api
@@ -23,11 +23,11 @@ cloning from the GitHub repo:
     $ python setup.py build
     $ python setup.py install
 
-use pip from the GitHub repo:
+*use pip with the GitHub repo*:
     
     $ pip install -U --user git+git://github.com/nextcaller/nextcaller-python-api.git
 
-use pip from pypi:
+*use pip with pypi*:
 
     $ pip install -U --user pynextcaller
 
@@ -52,7 +52,7 @@ Client
     from pynextcaller.client import Client
     client = Client(api_key, api_secret)
 
-    Parameters:
+**Parameters**:
 
     api_key - api key
     api_secret - api secret
@@ -63,9 +63,9 @@ API Items
 
 ### Get profile by phone ###
 
-    res = client.Phone(number, response_format='json', handler=None)
+    res = client.Phone.get(number, response_format='json', handler=None)
     
-    Parameters:
+**Parameters**:
     
     number - phone number
     response_format - [json|xml] - required response format
@@ -74,9 +74,9 @@ API Items
 
 ### Get profile by id ###
 
-    res = client.Profile(profile_id, response_format='json', handler=None)
+    res = client.Profile.get(profile_id, response_format='json', handler=None)
     
-    Parameters:
+**Parameters**:
     
     profile_id - id of a profile
     response_format - [json|xml] - required response format
@@ -88,20 +88,25 @@ API Items
 
     res = client.Profile.update(profile_id, data, handler=None)
     
-    Parameters:
-    
+**Parameters**:
+
     profile_id - id of a profile
     data - data to update
     handler - [None] - function, response handler.
     Arguments of the handler function - (response, response_format) 
 
-    Example:
+**Example**:
+
     profile_id = "XXXXXXXXX" 
     data = {
         "email": "test@test.com"
     }
     handler = lambda response, response_format: response
     client.Profile.update(profile_id, data, handler)
+
+**Response**:
+
+*Returns 204 response in the case of the succesfull request.*
     
 
 Notes
@@ -113,12 +118,12 @@ a handler function as the keyword argument. For example:
     func = lambda x, y: (x, x, y)
     result = client.Phone.get(number, handler=func)
 
-Default handler for response_format='json':
+Default handler for Phone.get and Profile.get methods and response_format='json':
     
     def handler(response, response_format):
         return json.loads(response)
 
-Default handler for response_format='xml': 
+Default handler for Phone.get and Profile.get methods and response_format='xml': 
     
     def handler(response, response_format):
         return xml.dom.minidom.parseString(response)
