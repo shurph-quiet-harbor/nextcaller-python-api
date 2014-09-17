@@ -4,7 +4,7 @@ nextcaller-python-api
 [![Build Status](https://travis-ci.org/Nextcaller/nextcaller-python-api.svg?branch=master)](https://travis-ci.org/Nextcaller/nextcaller-python-api)
 
 A Python wrapper around the Nextcaller API.
-The library supports python2.6+.
+The library supports python versions 2.6, 2.7, 3.2, 3.3, 3.4
 
 Installation
 ------------
