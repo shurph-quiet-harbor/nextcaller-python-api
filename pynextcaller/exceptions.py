@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 
 class HttpException(Exception):
 
@@ -10,9 +12,9 @@ class HttpException(Exception):
         return repr(self)
 
     def __repr__(self):
-        return "HttpException(%s): %s%s" % (
+        return 'HttpException(%s): %s%s' % (
             self.status, self.content,
-            "\n%s" % self.message if self.message else "")
+            '\n%s' % self.message if self.message else '')
 
 
 class ConnectionException(Exception):
@@ -24,4 +26,4 @@ class ConnectionException(Exception):
         return repr(self)
 
     def __repr__(self):
-        return "ConnectionException: %s" % self.content
+        return 'ConnectionException: %s' % self.content

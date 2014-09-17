@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import json
 import logging
 import requests
@@ -55,12 +56,12 @@ def api_request(url, data=None, headers=None, method='GET',
         data=data, headers=headers, method=method,
         timeout=timeout, ssl_verify=ssl_verify)
     status_code = 500
-    content = u''
+    content = ''
     try:
         response = requests.request(method, url, **kwargs)
-        _debug_log(u'Request url: %s' % response.url, debug)
+        _debug_log('Request url: %s' % response.url, debug)
         if method == 'POST':
-            _debug_log(u'Request body: %s' % response.request.body, debug)
+            _debug_log('Request body: %s' % response.request.body, debug)
         status_code = response.status_code
         content = response.content
         if status_code >= 400:

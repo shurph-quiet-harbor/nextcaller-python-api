@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from pynextcaller.auth import *
 from pynextcaller.constants import *
 from pynextcaller.utils import *
@@ -25,8 +26,8 @@ class Client(object):
                            position arguments: (response, response_format)
         """
         method = 'GET'
-        sanitize_format(response_format)
-        sanitize_phone(phone)
+        validate_format(response_format)
+        validate_phone(phone)
         url_params = {
             'phone': phone,
             'format': response_format,
@@ -54,7 +55,7 @@ class Client(object):
                            position arguments: (response, response_format)
         """
         method = 'GET'
-        sanitize_format(response_format)
+        validate_format(response_format)
         url_params = {
             'format': response_format
         }

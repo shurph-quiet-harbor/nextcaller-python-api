@@ -1,16 +1,31 @@
+from __future__ import unicode_literals
 import json
 from xml.dom.minidom import parseString
 try:
     from urllib import urlencode
 except ImportError:
     from urllib.parse import urlencode
+try:
+    unicode = unicode
+except NameError:
+    # 'unicode' is undefined, must be Python 3
+    str = str
+    unicode = str
+    bytes = bytes
+    basestring = (str, bytes)
+else:
+    # 'unicode' exists, must be Python 2
+    str = str
+    unicode = unicode
+    bytes = str
+    basestring = basestring
 from pynextcaller.constants import *
 
 
 __all__ = (
     'default_handle_response',
-    'sanitize_format',
-    'sanitize_phone',
+    'validate_format',
+    'validate_phone',
     'prepare_url',
     'prepare_json_data',
 )
@@ -39,26 +54,29 @@ def default_handle_response(resp, response_format='json'):
     return resp
 
 
-def sanitize_phone(value, length=DEFAULT_PHONE_LENGTH):
+def validate_phone(value, length=DEFAULT_PHONE_LENGTH):
+    """Validate phone format"""
     if not value:
         raise ValueError(
-            'Invalid phone number: %s. Cannot be blank.' % value)
+            'Invalid phone number: %s. Phone cannot be blank.' % value)
     if isinstance(value, int):
         value = str(value)
-    if not isinstance(value, str):
+    if not isinstance(value, basestring):
         raise ValueError(
-            'Invalid phone number: %s. Cannot be type of %s.' % (
+            'Invalid phone number: %s. Phone cannot be type of %s.' % (
                 value, type(value)))
     if not len(value) == length:
         raise ValueError(
-            'Invalid phone number: %s. Should has length %s.' % (
+            'Invalid phone number: %s. Phone should has length %s.' % (
                 value, length))
     if not value.isdigit():
         raise ValueError(
-            'Invalid phone number: %s. Should consists of digits.' % value)
+            'Invalid phone number: %s. '
+            'Phone should consists of only digits.' % value)
 
 
-def sanitize_format(response_format):
+def validate_format(response_format):
+    """Validate response format"""
     if response_format not in RESPONSE_FORMATS:
         raise ValueError(
             'Unsupported format: %s. Supported formats are: %s' % (
@@ -66,6 +84,7 @@ def sanitize_format(response_format):
 
 
 def prepare_url(path, url_params=None):
+    """Prepare url from path and params"""
     if url_params is None:
         url_params = {}
     url = '%s%s' % (BASE_URL,  path)

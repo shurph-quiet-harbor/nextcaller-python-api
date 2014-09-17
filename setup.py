@@ -1,4 +1,5 @@
 """The setup and build script for the pynextcaller library."""
+import sys
 import io
 import os
 from ez_setup import use_setuptools
@@ -8,6 +9,11 @@ from setuptools import setup, find_packages
 __author__ = 'Igor Nemilentsev'
 __author_email__ = 'trezorg@gmail.com'
 __version__ = '0.0.3'
+tests_require = ['nose']
+
+
+if sys.version_info < (3, 3):
+    tests_require.append('mock')
 
 
 def read(*names, **kwargs):
@@ -30,8 +36,7 @@ setup(
     include_package_data=True,
     install_requires=['requests'],
     test_suite='nose.collector',
-    tests_require=['nose', 'mock'],
-    setup_requires=['nose'],
+    tests_require=tests_require,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

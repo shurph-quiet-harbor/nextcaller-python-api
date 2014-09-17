@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import unittest
 try:
     from unittest import mock
@@ -101,6 +102,35 @@ PHONE_XML_RESULT_EXAMPLE = '''
 
 
 class PhoneTestCase(BaseTestCase):
+
+    def test_by_short_phone(self):
+        phone = '212555838'
+        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
+        with self.assertRaises(ValueError) as context:
+            self.client.get_by_phone(phone)
+        self.assertEquals(
+            context.exception.args[0],
+            'Invalid phone number: 212555838. Phone should has length 10.')
+
+    def test_by_wrong_phone(self):
+        phone = 'XXXXXXXXXX'
+        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
+        with self.assertRaises(ValueError) as context:
+            self.client.get_by_phone(phone)
+        self.assertEqual(
+            context.exception.args[0],
+            'Invalid phone number: XXXXXXXXXX. '
+            'Phone should consists of only digits.')
+
+    def test_by_wrong_format(self):
+        phone = 2125558383
+        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
+        with self.assertRaises(ValueError) as context:
+            self.client.get_by_phone(phone, response_format='test')
+        self.assertEqual(
+            context.exception.args[0],
+            'Unsupported format: test. '
+            'Supported formats are: (\'json\', \'xml\')')
 
     def test_by_phone_json_request(self):
         phone = '2125558383'
