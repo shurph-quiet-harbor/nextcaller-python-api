@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 import json
-from xml.dom.minidom import parseString
 try:
     from urllib import urlencode
 except ImportError:
@@ -24,7 +23,6 @@ from pynextcaller.constants import *
 
 __all__ = (
     'default_handle_response',
-    'validate_format',
     'validate_phone',
     'prepare_url',
     'prepare_json_data',
@@ -35,10 +33,6 @@ def _handle_json_response(resp):
     return json.loads(resp)
 
 
-def _handle_xml_response(resp):
-    return parseString(resp)
-
-
 def prepare_json_data(data):
     try:
         return json.dumps(data)
@@ -46,12 +40,8 @@ def prepare_json_data(data):
         return data
 
 
-def default_handle_response(resp, response_format='json'):
-    if response_format == 'json':
-        return _handle_json_response(resp)
-    if response_format == 'xml':
-        return _handle_xml_response(resp)
-    return resp
+def default_handle_response(resp):
+    return _handle_json_response(resp)
 
 
 def validate_phone(value, length=DEFAULT_PHONE_LENGTH):
@@ -73,14 +63,6 @@ def validate_phone(value, length=DEFAULT_PHONE_LENGTH):
         raise ValueError(
             'Invalid phone number: %s. '
             'Phone should consists of only digits.' % value)
-
-
-def validate_format(response_format):
-    """Validate response format"""
-    if response_format not in RESPONSE_FORMATS:
-        raise ValueError(
-            'Unsupported format: %s. Supported formats are: %s' % (
-                response_format, RESPONSE_FORMATS))
 
 
 def prepare_url(path, url_params=None):

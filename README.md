@@ -63,25 +63,23 @@ API Items
 
 ### Get profile by phone ###
 
-    res = client.get_by_phone(number, response_format='json', handler=None)
+    res = client.get_by_phone(number, handler=None)
     
 **Parameters**:
     
     number - phone number
-    response_format - [json|xml] - required response format
     handler - [None] - function, response handler.
-    Arguments of the handler function - (response, response_format) 
+    Arguments of the handler function - (response) 
 
 ### Get profile by id ###
 
-    res = client.get_by_profile_id(profile_id, response_format='json', handler=None)
+    res = client.get_by_profile_id(profile_id, handler=None)
     
 **Parameters**:
     
     profile_id - id of a profile
-    response_format - [json|xml] - required response format
     handler - [None] - function, response handler.
-    Arguments of the handler function - (response, response_format) 
+    Arguments of the handler function - (response) 
 
 
 ### Update profile by id ###
@@ -93,7 +91,7 @@ API Items
     profile_id - id of a profile
     data - data to update
     handler - [None] - function, response handler.
-    Arguments of the handler function - (response, response_format) 
+    Arguments of the handler function - (response) 
 
 **Example**:
 
@@ -101,7 +99,7 @@ API Items
     data = {
         "email": "test@test.com"
     }
-    handler = lambda response, response_format: response
+    handler = lambda response: response
     client.update_by_profile_id(profile_id, data, handler)
 
 **Response**:
@@ -118,12 +116,7 @@ a handler function as the keyword argument. For example:
     func = lambda x, y: (x, x, y)
     result = client.get_by_phone(number, handler=func)
 
-Default handler for PhoneItem.get and ProfileItem.get methods and response_format='json':
+Default handler for PhoneItem.get and ProfileItem.get methods:
     
-    def handler(response, response_format):
+    def handler(response):
         return json.loads(response)
-
-Default handler for PhoneItem.get and ProfileItem.get methods and response_format='xml': 
-    
-    def handler(response, response_format):
-        return xml.dom.minidom.parseString(response)
