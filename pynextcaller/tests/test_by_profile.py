@@ -87,6 +87,22 @@ PROFILE_JSON_RESULT_EXAMPLE = '''
 }
 '''
 
+PROFILE_JSON_WRONG_RESULT = '''
+{
+    "error": {
+        "message": "There are validation errors",
+        "code": "1054",
+        "type": "Validation",
+        "description": {
+            "email": [
+                "Invalid email address"
+            ]
+        }
+    }
+}
+
+'''
+
 
 class ProfileTestCase(BaseTestCase):
 
@@ -109,15 +125,14 @@ class ProfileTestCase(BaseTestCase):
         profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
         fake_response = self.FakeResponse()
         fake_response.status_code = 400
-        fake_response.content = \
-            '{"users": {"email": "Bad request: invalid email address"}}'
+        fake_response.content = PROFILE_JSON_WRONG_RESULT
         self.patch_http_request(fake_response)
         res = self.client.update_by_profile_id(
             profile_id, data=PROFILE_JSON_WRONG_REQUEST_EXAMPLE)
         self.assertEqual(res.status_code, 400)
         self.assertEqual(
-            json.loads(res.content)['users']['email'],
-            'Bad request: invalid email address')
+            json.loads(res.content)['error']['description']['email'][0],
+            'Invalid email address')
 
 
 if __name__ == '__main__':
