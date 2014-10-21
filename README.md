@@ -63,33 +63,36 @@ API Items
 
 ### Get profile by phone ###
 
-    res = client.get_by_phone(number, handler=None)
+    res = client.get_by_phone(number, handler=None, debug=False)
     
 **Parameters**:
     
     number - phone number
+    debug  - [True|False] - default False
     handler - [None] - function, response handler.
     Arguments of the handler function - (response) 
 
 ### Get profile by id ###
 
-    res = client.get_by_profile_id(profile_id, handler=None)
+    res = client.get_by_profile_id(profile_id, handler=None, debug=False)
     
 **Parameters**:
     
     profile_id - id of a profile
+    debug  - [True|False] - default False
     handler - [None] - function, response handler.
     Arguments of the handler function - (response) 
 
 
 ### Update profile by id ###
 
-    res = client.update_by_profile_id(profile_id, data, handler=None)
+    res = client.update_by_profile_id(profile_id, data, handler=None, debug=False)
     
 **Parameters**:
 
     profile_id - id of a profile
     data - data to update
+    debug  - [True|False] - default False
     handler - [None] - function, response handler.
     Arguments of the handler function - (response) 
 
@@ -104,7 +107,7 @@ API Items
 
 **Response**:
 
-*Returns 204 response in the case of the succesfull request.*
+*Returns 204 response in the case of the successful request.*
     
 
 Notes

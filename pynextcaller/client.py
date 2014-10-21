@@ -21,7 +21,7 @@ class Client(object):
         debug           -- boolean (default True)
         handler         -- optional function that will be processing
                            the response.
-                           position arguments: (response, response_format)
+                           position arguments: (response)
         """
         method = 'GET'
         validate_phone(phone)
@@ -46,7 +46,7 @@ class Client(object):
         debug           -- boolean (default True)
         handler         -- optional function that will be processing
                            the response.
-                           position arguments: (response, response_format)
+                           position arguments: (response)
         """
         method = 'GET'
         url_params = {
@@ -70,7 +70,7 @@ class Client(object):
         debug           -- boolean (default True)
         handler         -- optional function that will be processing
                            the response.
-                           position arguments: (response, response_format)
+                           position arguments: (response)
         """
         method = 'POST'
         url_params = {
