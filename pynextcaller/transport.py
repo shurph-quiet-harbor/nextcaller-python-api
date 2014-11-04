@@ -55,22 +55,14 @@ def api_request(url, data=None, headers=None, method='GET',
     kwargs = _prepare_request_data(
         data=data, headers=headers, method=method,
         timeout=timeout, ssl_verify=ssl_verify)
-    status_code = 500
-    content = ''
-    try:
-        response = requests.request(method, url, **kwargs)
-        _debug_log('Request url: %s' % response.url, debug)
-        if method == 'POST':
-            _debug_log('Request body: %s' % response.request.body, debug)
-        status_code = response.status_code
-        content = response.content
-        if status_code >= 400:
-            response.raise_for_status()
-        return response.text
-    except requests.HTTPError as err:
-        raise HttpException(status_code, _to_json(content), err)
-    except requests.RequestException as err:
-        raise ConnectionException(err)
+    response = requests.request(method, url, **kwargs)
+    _debug_log('Request url: %s' % response.url, debug)
+    if method == 'POST':
+        _debug_log('Request body: %s' % response.request.body, debug)
+    status_code = response.status_code
+    if status_code >= 400:
+        response.raise_for_status()
+    return response.text
 
 
 def _build_headers(auth, user_agent=None, content_type=None):

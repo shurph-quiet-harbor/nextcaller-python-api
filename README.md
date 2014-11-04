@@ -107,8 +107,30 @@ API Items
 
 **Response**:
 
-*Returns 204 response in the case of the successful request.*
+*Returns 204 No Content response in the case of the successful request.*
     
+
+Errors handling
+---------------
+
+In case the library gets a response with the http code more or equal 400,
+the [requests.exceptions.HTTPError](http://docs.python-requests.org/en/latest/api/#requests.exceptions.HTTPError)
+exception is raised.
+
+In the event of a network problem (e.g. DNS failure, refused connection, etc),
+the [requests.exceptions.ConnectionError](http://docs.python-requests.org/en/latest/api/#requests.exceptions.ConnectionError)
+exception is raised.
+
+If a request times out,
+the [requests.exceptions.Timeout](http://docs.python-requests.org/en/latest/api/#requests.exceptions.Timeout)
+exception is raised.
+
+If a request exceeds the configured number of maximum redirections, the
+[requests.exceptions.TooManyRedirects](http://docs.python-requests.org/en/latest/api/#requests.exceptions.TooManyRedirects)
+exception is raised.
+
+All exceptions inherit from the
+[requests.exceptions.RequestException](http://docs.python-requests.org/en/latest/api/#requests.exceptions.RequestException).
 
 Notes
 ------
