@@ -3,7 +3,6 @@ import json
 import logging
 import requests
 from pynextcaller.constants import *
-from pynextcaller.exceptions import *
 
 
 __all__ = (
@@ -56,9 +55,9 @@ def api_request(url, data=None, headers=None, method='GET',
         data=data, headers=headers, method=method,
         timeout=timeout, ssl_verify=ssl_verify)
     response = requests.request(method, url, **kwargs)
-    _debug_log('Request url: %s' % response.url, debug)
+    _debug_log('Request url: {0}'.format(response.url), debug)
     if method == 'POST':
-        _debug_log('Request body: %s' % response.request.body, debug)
+        _debug_log('Request body: {0}'.format(response.request.body), debug)
     status_code = response.status_code
     if status_code >= 400:
         response.raise_for_status()

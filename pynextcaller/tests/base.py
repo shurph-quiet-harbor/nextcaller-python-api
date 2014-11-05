@@ -5,7 +5,7 @@ try:
     from unittest import mock
 except ImportError:
     import mock
-from pynextcaller.client import Client
+from pynextcaller.client import NextCallerClient
 from pynextcaller import transport
 
 
@@ -29,7 +29,7 @@ class BaseTestCase(unittest.TestCase):
         self.api_request = transport.api_request
         self.mock = mock.Mock()
         transport.api_request = self.mock
-        self.client = Client(api_key, api_secret)
+        self.client = NextCallerClient(api_key, api_secret)
         self.fake_response = self.FakeResponse()
         self.fake_response.status_code = 204
 

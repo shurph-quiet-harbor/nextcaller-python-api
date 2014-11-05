@@ -16,9 +16,9 @@ class BasicAuth(object):
     def get_headers(self):
         """Prepare auth_headers"""
         value = b64encode(
-            ("%s:%s" % (self.api_key, self.api_secret)).encode('utf-8')
+            ("{0}:{1}".format(self.api_key, self.api_secret)).encode('utf-8')
         ).decode('utf-8')
-        return {'Authorization': 'Basic %s' % value}
+        return {'Authorization': 'Basic {0}'.format(value)}
 
     def __call__(self):
         return self.get_headers()

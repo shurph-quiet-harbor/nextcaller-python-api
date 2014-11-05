@@ -24,6 +24,7 @@ from pynextcaller.constants import *
 __all__ = (
     'default_handle_response',
     'validate_phone',
+    'validate_profile_id',
     'prepare_url',
     'prepare_json_data',
 )
@@ -48,28 +49,45 @@ def validate_phone(value, length=DEFAULT_PHONE_LENGTH):
     """Validate phone format"""
     if not value:
         raise ValueError(
-            'Invalid phone number: %s. Phone cannot be blank.' % value)
+            'Invalid phone number: {0}. Phone cannot be blank.'.format(value))
     if isinstance(value, int):
         value = str(value)
     if not isinstance(value, basestring):
         raise ValueError(
-            'Invalid phone number: %s. Phone cannot be type of %s.' % (
+            'Invalid phone number: {0}. Phone cannot be type of {1}.'.format(
                 value, type(value)))
     if not len(value) == length:
         raise ValueError(
-            'Invalid phone number: %s. Phone should has length %s.' % (
+            'Invalid phone number: {0}. Phone should has length {1}.'.format(
                 value, length))
     if not value.isdigit():
         raise ValueError(
-            'Invalid phone number: %s. '
-            'Phone should consists of only digits.' % value)
+            'Invalid phone number: {0}. '
+            'Phone should consists of only digits.'.format(value))
 
 
-def prepare_url(path, url_params=None):
+def validate_profile_id(value, length=DEFAULT_PROFILE_ID_LENGTH):
+    """Validate profile id format"""
+    if not value:
+        raise ValueError(
+            'Invalid profile id: {0}. Profile id cannot be blank.'.
+            format(value))
+    if not isinstance(value, basestring):
+        raise ValueError(
+            'Invalid profile id: {0}. Profile id cannot be type of {1}.'.
+            format(value, type(value)))
+    if len(value) != length:
+        raise ValueError(
+            'Invalid profile id: {0}. Profile id should has length {1}.'.
+            format(value, length))
+
+
+def prepare_url(path, url_params=None, sandbox=False):
     """Prepare url from path and params"""
+    base_url = BASE_URL if not sandbox else BASE_SANDBOX_URL
     if url_params is None:
         url_params = {}
-    url = '%s%s' % (BASE_URL,  path)
+    url = '{0}{1}'.format(base_url,  path)
     if not url.endswith('/'):
         url += '/'
     url_params_str = urlencode(url_params)

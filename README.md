@@ -35,27 +35,30 @@ Installation
 Example
 -------
 
+    from pynextcaller.client import NextCallerClient
     api_key = "XXXXX"
     api_secret = "XXXXX"
+    sandbox = False
     phone_number = "121212..."
-    from pynextcaller.client import Client
-    client = Client(api_key, api_secret)
+    client = NextCallerClient(api_key, api_secret, sandbox=sandbox)
     resp = client.get_by_phone(phone_number)
     print resp
 
 
-Client
--------------
+NextCallerClient
+----------------
 
     api_key = "XXXXX"
     api_secret = "XXXXX"
-    from pynextcaller.client import Client
-    client = Client(api_key, api_secret)
+    sandbox = False
+    from pynextcaller.client import NextCallerClient
+    client = NextCallerClient(api_key, api_secret, sandbox=False)
 
 **Parameters**:
 
     api_key - api key
     api_secret - api secret
+    sandbox - sandbox mode
 
 
 API Items
@@ -107,13 +110,21 @@ API Items
 
 **Response**:
 
-*Returns 204 No Content response in the case of the successful request.*
+*Returns **204 No Content** response in the case of the successful request.*
     
 
 Errors handling
 ---------------
 
-In case the library gets a response with the http code more or equal 400,
+In case of wrong phone number a ValueError exception will be thrown:
+
+    ValueError('Invalid phone number: 1221. .........)
+
+In case of wrong profile id a ValueError exception will be thrown:
+
+    ValueError('Invalid profile id: assw2. .........)
+
+In case of the library gets a response with the http code more or equal 400,
 the [requests.exceptions.HTTPError](http://docs.python-requests.org/en/latest/api/#requests.exceptions.HTTPError)
 exception is raised.
 
@@ -132,16 +143,28 @@ exception is raised.
 All exceptions inherit from the
 [requests.exceptions.RequestException](http://docs.python-requests.org/en/latest/api/#requests.exceptions.RequestException).
 
+The library uses underlying python requests package. You can find all possible exceptions here:
+[requests.exceptions](http://docs.python-requests.org/en/latest/api/#exceptions)
+
 Notes
 ------
 
 It is possible to override the default response handler by passing
 a handler function as the keyword argument. For example:
 
-    func = lambda x, y: (x, x, y)
-    result = client.get_by_phone(number, handler=func)
+    import json
 
-Default handler for PhoneItem.get and ProfileItem.get methods:
-    
+    def response_handler(response):
+        return json.loads(response, encoding='ascii')['records']
+
+    result = client.get_by_phone(number, handler=response_handler)
+
+Default handler for **get_by_phone** and **get_by_profile_id** methods:
+
+    import json
+
     def handler(response):
         return json.loads(response)
+
+Default handler for **update_by_profile_id** method is absent.
+The request just returns **204 No Content** response.
