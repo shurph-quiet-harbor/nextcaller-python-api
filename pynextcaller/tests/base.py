@@ -24,12 +24,12 @@ class BaseTestCase(unittest.TestCase):
         self.mock.return_value = result
 
     def setUp(self):
-        api_key = 'api_key'
-        api_secret = 'api_secret'
+        username = 'username'
+        password = 'password'
         self.api_request = transport.api_request
         self.mock = mock.Mock()
         transport.api_request = self.mock
-        self.client = NextCallerClient(api_key, api_secret)
+        self.client = NextCallerClient(username, password)
         self.fake_response = self.FakeResponse()
         self.fake_response.status_code = 204
 

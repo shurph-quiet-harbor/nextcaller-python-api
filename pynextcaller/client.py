@@ -8,21 +8,21 @@ from pynextcaller.transport import make_http_request
 class NextCallerClient(object):
     """The NextCaller API client"""
 
-    def __init__(self, api_key, api_secret, sandbox=False):
-        self.auth = BasicAuth(api_key, api_secret)
+    def __init__(self, username, password, sandbox=False):
+        self.auth = BasicAuth(username, password)
         self.sandbox = bool(sandbox)
 
     def get_by_phone(self, phone, debug=False, handler=None):
         """Get profiles by a phone
 
         position arguments:
-            phone       -- 10 digits phone, str ot int
+            phone           -- 10 digits phone, str ot int
 
         Keyword arguments:
-        debug           -- boolean (default True)
-        handler         -- optional function that will be processing
-                           the response.
-                           position arguments: (response)
+            debug           -- boolean (default True)
+            handler         -- optional function that will be processing
+                               the response.
+                               position arguments: (response)
         """
         method = 'GET'
         validate_phone(phone)
@@ -42,13 +42,13 @@ class NextCallerClient(object):
         """Get profile by a profile id
 
         position arguments:
-            profile_id  -- Profile identifier
+            profile_id      -- Profile identifier, str
 
         Keyword arguments:
-        debug           -- boolean (default True)
-        handler         -- optional function that will be processing
-                           the response.
-                           position arguments: (response)
+            debug           -- boolean (default True)
+            handler         -- optional function that will be processing
+                               the response.
+                               position arguments: (response)
         """
         method = 'GET'
         validate_profile_id(profile_id)
@@ -67,14 +67,14 @@ class NextCallerClient(object):
         """Update profile by a profile id
 
         position arguments:
-            profile_id  -- Profile identifier
+            profile_id      -- Profile identifier, str
+            data            -- dictionary with changed data
 
         Keyword arguments:
-        data            -- dictionary with changed data
-        debug           -- boolean (default True)
-        handler         -- optional function that will be processing
-                           the response.
-                           position arguments: (response)
+            debug           -- boolean (default True)
+            handler         -- optional function that will be processing
+                               the response.
+                               position arguments: (response)
         """
         method = 'POST'
         validate_profile_id(profile_id)

@@ -35,30 +35,55 @@ Installation
 Example
 -------
 
+    import logging
+    import os
+    from requests import HTTPError, RequestException
     from pynextcaller.client import NextCallerClient
-    api_key = "XXXXX"
-    api_secret = "XXXXX"
-    sandbox = False
-    phone_number = "121212..."
-    client = NextCallerClient(api_key, api_secret, sandbox=sandbox)
-    resp = client.get_by_phone(phone_number)
-    print resp
-
+    
+    
+    logging.basicConfig()
+    logger = logging.getLogger('nextcaller')
+    
+    username = 'XXXXX'
+    password = 'XXXXX'
+    phone_number = '1211211212'
+    
+    client = NextCallerClient(username, password, sandbox=sandbox)
+    try:
+        response = client.get_by_phone(phone_number, debug=True)
+        response_message = response.json()
+        logger.info(response_message)
+    except ValueError as err:
+        logger.error('Validation Error: {}'.format(err))
+    except HTTPError as err:
+        response = err.response
+        response_code = response.status_code
+        # try to parse error json message
+        try:
+            response_message = response.json()
+        except ValueError:
+            response_message = response.text
+        logger.error(
+            'HTTPError. Status code {}. Response message: {}'.
+            format(response_code, response_message))
+    except RequestException as err:
+        logger.error('RequestException. {}'.format(err))
+    
 
 NextCallerClient
 ----------------
 
-    api_key = "XXXXX"
-    api_secret = "XXXXX"
+    username = "XXXXX"
+    password = "XXXXX"
     sandbox = False
     from pynextcaller.client import NextCallerClient
-    client = NextCallerClient(api_key, api_secret, sandbox=False)
+    client = NextCallerClient(username, password, sandbox=False)
 
 **Parameters**:
 
-    api_key - api key
-    api_secret - api secret
-    sandbox - sandbox mode
+    username - username
+    password - password
+    sandbox - [True|False] - default False
 
 
 API Items

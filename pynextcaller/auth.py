@@ -9,14 +9,14 @@ __all__ = (
 
 class BasicAuth(object):
     """Basic auth class"""
-    def __init__(self, api_key, api_secret):
-        self.api_key = api_key
-        self.api_secret = api_secret
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
 
     def get_headers(self):
         """Prepare auth_headers"""
         value = b64encode(
-            ("{0}:{1}".format(self.api_key, self.api_secret)).encode('utf-8')
+            ("{0}:{1}".format(self.username, self.password)).encode('utf-8')
         ).decode('utf-8')
         return {'Authorization': 'Basic {0}'.format(value)}
 
