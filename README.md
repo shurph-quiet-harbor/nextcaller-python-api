@@ -36,7 +36,6 @@ Example
 -------
 
     import logging
-    import os
     from requests import HTTPError, RequestException
     from pynextcaller.client import NextCallerClient
     
@@ -46,13 +45,13 @@ Example
     
     username = 'XXXXX'
     password = 'XXXXX'
+    sandbox = True
     phone_number = '1211211212'
     
     client = NextCallerClient(username, password, sandbox=sandbox)
     try:
-        response = client.get_by_phone(phone_number, debug=True)
-        response_message = response.json()
-        logger.info(response_message)
+        response_content = client.get_by_phone(phone_number, debug=True)
+        logger.info(response_content)
     except ValueError as err:
         logger.error('Validation Error: {}'.format(err))
     except HTTPError as err:
@@ -76,14 +75,16 @@ NextCallerClient
     username = "XXXXX"
     password = "XXXXX"
     sandbox = False
+    version = 'v2'
     from pynextcaller.client import NextCallerClient
-    client = NextCallerClient(username, password, sandbox=False)
+    client = NextCallerClient(username, password, sandbox=False, version=version)
 
 **Parameters**:
 
-    username - username
-    password - password
-    sandbox - [True|False] - default False
+    username    - username
+    password    - password
+    sandbox     - [True|False], default False
+    version     - api version, default 'v2'
 
 
 API Items
@@ -95,9 +96,9 @@ API Items
     
 **Parameters**:
     
-    number - phone number
-    debug  - [True|False] - default False
-    handler - [None] - function, response handler.
+    number      - phone number
+    debug       - [True|False] - default False
+    handler     - [None] - function, response handler.
     Arguments of the handler function - (response) 
 
 ### Get profile by id ###
@@ -106,9 +107,9 @@ API Items
     
 **Parameters**:
     
-    profile_id - id of a profile
-    debug  - [True|False] - default False
-    handler - [None] - function, response handler.
+    profile_id  - id of a profile
+    debug       - [True|False], default False
+    handler     - [None], function, response handler.
     Arguments of the handler function - (response) 
 
 

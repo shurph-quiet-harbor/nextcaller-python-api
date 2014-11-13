@@ -11,8 +11,19 @@ __all__ = (
 )
 
 
-LOG = logging.getLogger(__file__)
-LOG.addHandler(logging.StreamHandler())
+def prepare_logger():
+    log = logging.getLogger('nextcaller.transport')
+    handler = logging.StreamHandler()
+    log.addHandler(handler)
+    log.setLevel(logging.DEBUG)
+    log.propagate = False
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    return log
+
+
+logger = prepare_logger()
 
 
 def _to_json(content):
@@ -24,10 +35,7 @@ def _to_json(content):
 
 def _debug_log(value, debug=True):
     if debug:
-        LOG.setLevel(logging.DEBUG)
-        LOG.debug(value)
-    else:
-        LOG.setLevel(logging.NOTSET)
+        logger.debug(value)
 
 
 def _prepare_request_data(

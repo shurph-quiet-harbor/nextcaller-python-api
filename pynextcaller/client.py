@@ -8,9 +8,20 @@ from pynextcaller.transport import make_http_request
 class NextCallerClient(object):
     """The NextCaller API client"""
 
-    def __init__(self, username, password, sandbox=False):
+    def __init__(self, username, password,
+                 sandbox=False, version=DEFAULT_API_VERSION):
+        """
+        position arguments:
+            username        -- username, api key
+            password        -- password, api secret
+
+        Keyword arguments:
+            sandbox         -- [True|False] - default False
+            version         -- api version - default 'v2'
+        """
         self.auth = BasicAuth(username, password)
         self.sandbox = bool(sandbox)
+        self.base_url = prepare_base_url(sandbox, version)
 
     def get_by_phone(self, phone, debug=False, handler=None):
         """Get profiles by a phone
@@ -30,8 +41,7 @@ class NextCallerClient(object):
             'phone': phone,
             'format': JSON_RESPONSE_FORMAT,
         }
-        url = prepare_url('records', url_params=url_params,
-                          sandbox=self.sandbox)
+        url = prepare_url(self.base_url, 'records', url_params=url_params)
         response = make_http_request(
             self.auth, url, method=method, debug=debug)
         if handler is None:
@@ -55,8 +65,8 @@ class NextCallerClient(object):
         url_params = {
             'format': JSON_RESPONSE_FORMAT
         }
-        url = prepare_url('users/{0}/'.format(profile_id),
-                          url_params=url_params, sandbox=self.sandbox)
+        url = prepare_url(self.base_url, 'users/{0}/'.format(profile_id),
+                          url_params=url_params)
         response = make_http_request(
             self.auth, url, method=method, debug=debug)
         if handler is None:
@@ -81,8 +91,8 @@ class NextCallerClient(object):
         url_params = {
             'format': JSON_RESPONSE_FORMAT
         }
-        url = prepare_url('users/{0}/'.format(profile_id),
-                          url_params=url_params, sandbox=self.sandbox)
+        url = prepare_url(self.base_url, 'users/{0}/'.format(profile_id),
+                          url_params=url_params)
         data = prepare_json_data(data)
         response = make_http_request(
             self.auth, url, data=data, method=method,

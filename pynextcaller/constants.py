@@ -7,6 +7,6 @@ DEFAULT_USER_AGENT = 'nextcaller/python/0.0.1'
 JSON_CONTENT_TYPE = 'application/json; charset=utf-8'
 
 # urls
-API_VERSION = 'v2'
-BASE_URL = 'https://api.nextcaller.com/{0}/'.format(API_VERSION)
-BASE_SANDBOX_URL = 'https://api.sandbox.nextcaller.com/{0}/'.format(API_VERSION)
+DEFAULT_API_VERSION = 'v2'
+BASE_URL = 'https://api.nextcaller.com/{0}/'
+BASE_SANDBOX_URL = 'https://api.sandbox.nextcaller.com/{0}/'
