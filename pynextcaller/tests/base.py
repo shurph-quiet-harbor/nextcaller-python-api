@@ -5,7 +5,7 @@ try:
     from unittest import mock
 except ImportError:
     import mock
-from pynextcaller.client import NextCallerClient
+from pynextcaller.client import NextCallerClient, NextCallerPlatformClient
 from pynextcaller import transport
 
 
@@ -35,3 +35,16 @@ class BaseTestCase(unittest.TestCase):
 
     def tearDown(self):
         transport.api_request = self.api_request
+
+
+class BasePlatformTestCase(BaseTestCase):
+
+    def setUp(self):
+        username = 'username'
+        password = 'password'
+        self.api_request = transport.api_request
+        self.mock = mock.Mock()
+        transport.api_request = self.mock
+        self.client = NextCallerPlatformClient(username, password)
+        self.fake_response = self.FakeResponse()
+        self.fake_response.status_code = 204

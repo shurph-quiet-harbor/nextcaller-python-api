@@ -40,8 +40,13 @@ Example
     from pynextcaller.client import NextCallerClient
     
     
-    logging.basicConfig()
     logger = logging.getLogger('nextcaller')
+    handler = logging.StreamHandler()
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
     
     username = 'XXXXX'
     password = 'XXXXX'
@@ -96,10 +101,13 @@ API Items
     
 **Parameters**:
     
-    number      - phone number
-    debug       - [True|False] - default False
-    handler     - [None] - function, response handler.
-    Arguments of the handler function - (response) 
+    position arguments:
+        phone               -- 10 digits phone, str ot int
+
+    Keyword arguments:
+        debug               -- boolean (default True)
+        handler             -- optional function that will be processing the response.
+                               position arguments: (response)
 
 ### Get profile by id ###
 
@@ -107,10 +115,13 @@ API Items
     
 **Parameters**:
     
-    profile_id  - id of a profile
-    debug       - [True|False], default False
-    handler     - [None], function, response handler.
-    Arguments of the handler function - (response) 
+    position arguments:
+        profile_id          -- Profile identifier, str, length is 30
+
+    Keyword arguments:
+        debug               -- boolean (default True)
+        handler             -- optional function that will be processing the response.
+                               position arguments: (response)
 
 
 ### Update profile by id ###
@@ -119,11 +130,14 @@ API Items
     
 **Parameters**:
 
-    profile_id - id of a profile
-    data - data to update
-    debug  - [True|False] - default False
-    handler - [None] - function, response handler.
-    Arguments of the handler function - (response) 
+    position arguments:
+        profile_id          -- Profile identifier, str, length is 30
+        data                -- dictionary with changed data
+
+    Keyword arguments:
+        debug               -- boolean (default True)
+        handler             -- optional function that will be processing the response.
+                               position arguments: (response)
 
 **Example**:
 
@@ -132,12 +146,12 @@ API Items
         "email": "test@test.com"
     }
     handler = lambda response: response
-    client.update_by_profile_id(profile_id, data, handler)
+    client.update_by_profile_id(profile_id, data=data, handler=handler)
 
 **Response**:
 
 *Returns **204 No Content** response in the case of the successful request.*
-    
+
 
 Errors handling
 ---------------
@@ -185,7 +199,7 @@ a handler function as the keyword argument. For example:
 
     result = client.get_by_phone(number, handler=response_handler)
 
-Default handler for **get_by_phone** and **get_by_profile_id** methods:
+Default handler for **get_by_phone** and **get_by_profile_id** and **get_platform_statistics** methods:
 
     import json
 

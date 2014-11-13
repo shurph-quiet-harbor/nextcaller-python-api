@@ -100,7 +100,6 @@ PROFILE_JSON_WRONG_RESULT = '''
         }
     }
 }
-
 '''
 
 
