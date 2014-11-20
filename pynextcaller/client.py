@@ -35,7 +35,6 @@ class NextCallerClient(object):
                                 the response.
                                 position arguments: (response)
         """
-        method = 'GET'
         validate_phone(phone)
         debug = kwargs.pop('debug', None)
         handler = kwargs.pop('handler', None)
@@ -45,7 +44,7 @@ class NextCallerClient(object):
         }, **kwargs)
         url = prepare_url(self.base_url, 'records/', url_params=url_params)
         response = make_http_request(
-            self.auth, url, method=method, debug=debug)
+            self.auth, url, method='GET', debug=debug)
         if not callable(handler):
             return default_handle_response(response)
         return handler(response)
@@ -62,7 +61,6 @@ class NextCallerClient(object):
                                 the response.
                                 position arguments: (response)
         """
-        method = 'GET'
         validate_profile_id(profile_id)
         debug = kwargs.pop('debug', None)
         handler = kwargs.pop('handler', None)
@@ -72,7 +70,7 @@ class NextCallerClient(object):
         url = prepare_url(self.base_url, 'users/{0}/'.format(profile_id),
                           url_params=url_params)
         response = make_http_request(
-            self.auth, url, method=method, debug=debug)
+            self.auth, url, method='GET', debug=debug)
         if not callable(handler):
             return default_handle_response(response)
         return handler(response)
@@ -90,7 +88,6 @@ class NextCallerClient(object):
                                 the response.
                                 position arguments: (response)
         """
-        method = 'POST'
         validate_profile_id(profile_id)
         debug = kwargs.pop('debug', None)
         handler = kwargs.pop('handler', None)
@@ -101,10 +98,36 @@ class NextCallerClient(object):
                           url_params=url_params)
         data = prepare_json_data(data)
         response = make_http_request(
-            self.auth, url, data=data, method=method,
+            self.auth, url, data=data, method='POST',
             content_type=JSON_CONTENT_TYPE, debug=debug)
         if not callable(handler):
             return response
+        return handler(response)
+
+    def get_fraud_level(self, phone, **kwargs):
+        """Get fraud level for phone
+
+        position arguments:
+            phone               -- 10 digits phone, str ot int
+
+        Keyword arguments:
+            debug               -- boolean (default True)
+            handler             -- optional function that will be processing
+                                the response.
+                                position arguments: (response)
+        """
+        validate_phone(phone)
+        debug = kwargs.pop('debug', None)
+        handler = kwargs.pop('handler', None)
+        url_params = dict({
+            'phone': phone,
+            'format': JSON_RESPONSE_FORMAT,
+        }, **kwargs)
+        url = prepare_url(self.base_url, 'fraud/', url_params=url_params)
+        response = make_http_request(
+            self.auth, url, method='GET', debug=debug)
+        if not callable(handler):
+            return default_handle_response(response)
         return handler(response)
 
 
@@ -124,7 +147,6 @@ class NextCallerPlatformClient(NextCallerClient):
                                 the response.
                                 position arguments: (response)
         """
-        validate_phone(phone)
         if not kwargs.get('platform_username'):
             raise ValueError('Absent platform_username parameter')
         return super(NextCallerPlatformClient, self).\
@@ -143,7 +165,6 @@ class NextCallerPlatformClient(NextCallerClient):
                                 the response.
                                 position arguments: (response)
         """
-        validate_profile_id(profile_id)
         if not kwargs.get('platform_username'):
             raise ValueError('Absent platform_username parameter')
         return super(NextCallerPlatformClient, self).\
@@ -163,34 +184,50 @@ class NextCallerPlatformClient(NextCallerClient):
                                 the response.
                                 position arguments: (response)
         """
-        validate_profile_id(profile_id)
-        if not kwargs.get('platform_username'):
-            raise ValueError('Absent platform_username parameter')
         return super(NextCallerPlatformClient, self).\
             update_by_profile_id(profile_id, data, **kwargs)
 
-    def get_platform_statistics(self, platform_username=None,
-                                debug=False, handler=None):
+    def get_platform_statistics(self, debug=False, handler=None):
         """Get platform statistics
 
         Keyword arguments:
-            platform_username   -- platform username, str.
             debug               -- boolean (default True)
             handler             -- optional function that will be processing
                                 the response.
                                 position arguments: (response)
         """
-        method = 'GET'
         url_params = {
             'format': JSON_RESPONSE_FORMAT
         }
-        url_path = ('platform_users/' if not platform_username
-                    else 'platform_users/{0}/'.format(platform_username))
+        url = prepare_url(
+            self.base_url, 'platform_users/', url_params=url_params)
+        response = make_http_request(
+            self.auth, url, method='GET', debug=debug)
+        if not callable(handler):
+            return default_handle_response(response)
+        return handler(response)
+
+    def get_platform_user(self, platform_username, debug=False, handler=None):
+        """Get platform user
+
+        position arguments:
+            platform_username   -- platform username, str.
+
+        Keyword arguments:
+            debug               -- boolean (default True)
+            handler             -- optional function that will be processing
+                                the response.
+                                position arguments: (response)
+        """
+        url_params = {
+            'format': JSON_RESPONSE_FORMAT
+        }
+        url_path = 'platform_users/{0}/'.format(platform_username)
         url = prepare_url(self.base_url, url_path, url_params=url_params)
         response = make_http_request(
-            self.auth, url, method=method, debug=debug)
-        if handler is None:
-            handler = default_handle_response
+            self.auth, url, method='GET', debug=debug)
+        if not callable(handler):
+            return default_handle_response(response)
         return handler(response)
 
     def update_platform_user(self, platform_username, data,
@@ -207,7 +244,6 @@ class NextCallerPlatformClient(NextCallerClient):
                                 the response.
                                 position arguments: (response)
         """
-        method = 'POST'
         url_params = {
             'format': JSON_RESPONSE_FORMAT
         }
@@ -216,8 +252,23 @@ class NextCallerPlatformClient(NextCallerClient):
             url_params=url_params)
         data = prepare_json_data(data)
         response = make_http_request(
-            self.auth, url, data=data, method=method,
+            self.auth, url, data=data, method='POST',
             content_type=JSON_CONTENT_TYPE, debug=debug)
-        if handler is None:
+        if not callable(handler):
             return response
         return handler(response)
+
+    def get_fraud_level(self, phone, **kwargs):
+        """Get fraud level for phone
+
+        position arguments:
+            phone               -- 10 digits phone, str ot int
+
+        Keyword arguments:
+            debug               -- boolean (default True)
+            handler             -- optional function that will be processing
+                                the response.
+                                position arguments: (response)
+        """
+        return super(NextCallerPlatformClient, self).\
+            get_fraud_level(phone, **kwargs)

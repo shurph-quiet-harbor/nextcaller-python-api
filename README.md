@@ -153,6 +153,22 @@ API Items
 *Returns **204 No Content** response in the case of the successful request.*
 
 
+### Get fraud level ###
+
+    res = client.get_fraud_level(phone, handler=None, debug=False)
+    
+**Parameters**:
+    
+    position arguments:
+        phone               -- 10 digits phone, str ot int
+
+    Keyword arguments:
+        debug               -- boolean (default True)
+        handler             -- optional function that will be processing the response.
+                               position arguments: (response)
+
+
+
 Errors handling
 ---------------
 

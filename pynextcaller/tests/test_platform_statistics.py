@@ -115,7 +115,7 @@ class PlatformTestCase(BasePlatformTestCase):
 
     def test_get_users_statistics(self):
         self.patch_http_request(PLATFORM_STATISTICS_USER_JSON_RESULT_EXAMPLE)
-        res = self.client.get_platform_statistics(platform_username='test')
+        res = self.client.get_platform_user('test')
         self.assertEqual(res['username'], 'test')
         self.assertEqual(res['number_of_operations'], 3)
 
