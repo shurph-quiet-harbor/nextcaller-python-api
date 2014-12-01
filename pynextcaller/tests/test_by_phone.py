@@ -4,7 +4,7 @@ try:
     from unittest import mock
 except ImportError:
     import mock
-from pynextcaller.tests.base import BaseTestCase
+from .base import BaseTestCase
 
 
 PHONE_JSON_RESULT_EXAMPLE = '''
@@ -81,6 +81,11 @@ class PhoneTestCase(BaseTestCase):
         phone = 'XXXXXXXXXX'
         self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
         self.assertRaises(ValueError, self.client.get_by_phone, phone)
+
+    def test_by_wrong_argument(self):
+        phone = '1231231231'
+        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
+        self.assertRaises(ValueError, self.client.get_by_phone, phone, x='xx')
 
     def test_by_phone(self):
         phone = '2125558383'

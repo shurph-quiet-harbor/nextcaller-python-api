@@ -23,6 +23,7 @@ class NextCallerClient(object):
         self.sandbox = bool(sandbox)
         self.base_url = prepare_base_url(sandbox, version)
 
+    @check_kwargs
     def get_by_phone(self, phone, **kwargs):
         """Get profiles by a phone
 
@@ -49,6 +50,7 @@ class NextCallerClient(object):
             return default_handle_response(response)
         return handler(response)
 
+    @check_kwargs
     def get_by_profile_id(self, profile_id, **kwargs):
         """Get profile by a profile id
 
@@ -75,6 +77,7 @@ class NextCallerClient(object):
             return default_handle_response(response)
         return handler(response)
 
+    @check_kwargs
     def update_by_profile_id(self, profile_id, data, **kwargs):
         """Update profile by a profile id
 
@@ -104,6 +107,7 @@ class NextCallerClient(object):
             return response
         return handler(response)
 
+    @check_kwargs
     def get_fraud_level(self, phone, **kwargs):
         """Get fraud level for phone
 
@@ -134,6 +138,7 @@ class NextCallerClient(object):
 class NextCallerPlatformClient(NextCallerClient):
     """The NextCaller platform API client"""
 
+    @check_kwargs
     def get_by_phone(self, phone, **kwargs):
         """Get profiles by a phone
 
@@ -152,6 +157,7 @@ class NextCallerPlatformClient(NextCallerClient):
         return super(NextCallerPlatformClient, self).\
             get_by_phone(phone, **kwargs)
 
+    @check_kwargs
     def get_by_profile_id(self, profile_id, **kwargs):
         """Get profile by a profile id
 
@@ -170,6 +176,7 @@ class NextCallerPlatformClient(NextCallerClient):
         return super(NextCallerPlatformClient, self).\
             get_by_profile_id(profile_id, **kwargs)
 
+    @check_kwargs
     def update_by_profile_id(self, profile_id, data, **kwargs):
         """Update profile by a profile id
 

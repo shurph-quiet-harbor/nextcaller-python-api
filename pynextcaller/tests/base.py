@@ -5,8 +5,8 @@ try:
     from unittest import mock
 except ImportError:
     import mock
-from pynextcaller.client import NextCallerClient, NextCallerPlatformClient
-from pynextcaller import transport
+from ..client import NextCallerClient, NextCallerPlatformClient
+from .. import transport
 
 
 class BaseTestCase(unittest.TestCase):

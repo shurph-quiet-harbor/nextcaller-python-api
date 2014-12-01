@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 import json
 import unittest
-from pynextcaller.tests.base import BaseTestCase
+from .base import BaseTestCase
 
 
 PROFILE_JSON_REQUEST_EXAMPLE = {

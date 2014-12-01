@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 import json
 import logging
 import requests
-from pynextcaller.constants import *
+from .constants import *
 
 
 __all__ = (

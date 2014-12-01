@@ -4,7 +4,7 @@ try:
     from unittest import mock
 except ImportError:
     import mock
-from pynextcaller.tests.base import BaseTestCase, BasePlatformTestCase
+from .base import BaseTestCase, BasePlatformTestCase
 
 
 FRAUD_JSON_RESULT_EXAMPLE = '''

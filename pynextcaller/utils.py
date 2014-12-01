@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import functools
 import json
 try:
     from urllib import urlencode
@@ -18,7 +19,7 @@ else:
     unicode = unicode
     bytes = str
     basestring = basestring
-from pynextcaller.constants import *
+from .constants import *
 
 
 __all__ = (
@@ -28,6 +29,7 @@ __all__ = (
     'prepare_url',
     'prepare_base_url',
     'prepare_json_data',
+    'check_kwargs',
 )
 
 
@@ -101,3 +103,20 @@ def prepare_base_url(sandbox=False, version=DEFAULT_API_VERSION):
     base_url = BASE_URL.format(version) if not sandbox \
         else BASE_SANDBOX_URL.format(version)
     return base_url
+
+
+def check_kwargs(*all_args):
+
+    def dec(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            for kw in kwargs:
+                if kw not in all_args:
+                    raise ValueError(
+                        'Keyword argument {0} is not allowed'.format(kw))
+            return func(*args, **kwargs)
+        return wrapper
+    return dec
+
+
+check_kwargs = check_kwargs('debug', 'handler', 'data', 'platform_username')
