@@ -191,6 +191,8 @@ class NextCallerPlatformClient(NextCallerClient):
                                 the response.
                                 position arguments: (response)
         """
+        if not kwargs.get('platform_username'):
+            raise ValueError('Absent platform_username parameter')
         return super(NextCallerPlatformClient, self).\
             update_by_profile_id(profile_id, data, **kwargs)
 
