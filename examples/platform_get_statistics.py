@@ -15,11 +15,12 @@ username = 'XXXXX'
 password = 'XXXXX'
 platform_username = 'test'
 sandbox = True
+debug = True
 
-client = NextCallerPlatformClient(username, password, sandbox=sandbox)
+client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
 
 try:
-    response_content = client.get_platform_statistics(debug=True)
+    response_content = client.get_platform_statistics(page=1)
     logger.info(response_content)
 except HTTPError as err:
     response = err.response

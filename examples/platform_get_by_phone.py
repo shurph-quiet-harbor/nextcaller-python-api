@@ -1,6 +1,6 @@
 import logging
 from requests import HTTPError, RequestException
-from pynextcaller.client import NextCallerClient
+from pynextcaller.client import NextCallerPlatformClient
 
 logger = logging.getLogger('nextcaller')
 handler = logging.StreamHandler()
@@ -15,12 +15,13 @@ password = 'XXXXX'
 sandbox = True
 debug = True
 phone_number = '1211211212'
+platform_username = 'test'
 
-client = NextCallerClient(username, password, sandbox=sandbox, debug=debug)
+client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
 
 # get by phone
 try:
-    response_content = client.get_by_phone(phone_number)
+    response_content = client.get_by_phone(phone_number, platform_username)
     logger.info(response_content)
 except ValueError as err:
     logger.error('Validation Error: {}'.format(err))

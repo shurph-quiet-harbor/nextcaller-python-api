@@ -13,16 +13,15 @@ handler.setFormatter(formatter)
 username = 'XXXXX'
 password = 'XXXXX'
 sandbox = True
-phone_number = '1211211212'
+debug = True
 profile_id = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 
-client = NextCallerClient(username, password, sandbox=sandbox)
+client = NextCallerClient(username, password, sandbox=sandbox, debug=debug)
 
 # update by profile id
 try:
     data = {'email': 'test@test.com'}
-    response_content = client.update_by_profile_id(profile_id, data, debug=True)
-    logger.info(response_content)
+    client.update_by_profile_id(profile_id, data)
 except ValueError as err:
     logger.error('Validation Error: {}'.format(err))
 except HTTPError as err:

@@ -142,4 +142,4 @@ def check_kwargs(*all_args):
     return dec
 
 
-check_kwargs = check_kwargs('debug', 'handler', 'data', 'platform_username')
+check_kwargs = check_kwargs('data', 'platform_username')
