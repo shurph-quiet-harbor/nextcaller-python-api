@@ -185,6 +185,7 @@ class NextCallerPlatformClient(NextCallerClient):
         :return:dict        Dictionary with platform statistic
         """
         url_params = dict({
+            'page': page,
             'format': JSON_RESPONSE_FORMAT,
         }, **kwargs)
         url = prepare_url(
