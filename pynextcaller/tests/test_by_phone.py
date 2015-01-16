@@ -4,7 +4,10 @@ try:
     from unittest import mock
 except ImportError:
     import mock
-from .base import BaseTestCase
+try:
+    from .base import BaseTestCase
+except (ValueError, ImportError):
+    from pynextcaller.tests.base import BaseTestCase
 
 
 PHONE_JSON_RESULT_EXAMPLE = '''

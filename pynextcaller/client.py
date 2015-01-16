@@ -54,7 +54,7 @@ class NextCallerClient(object):
                                 response with length in 30 symbols
         :param kwargs:dict      Additional params for request
 
-        :return:                Serialised response as dictionary
+        :return:dict            Serialised response as dictionary
         """
         validate_profile_id(profile_id)
         url_params = dict({
@@ -75,6 +75,8 @@ class NextCallerClient(object):
                                 response with length in 30 symbols
         :param data:dict        Data to update as dictionary
         :param kwargs:dict      Additional params for request
+
+        :return:str             HTTP Body of response as text
         """
         validate_profile_id(profile_id)
         url_params = dict({
@@ -83,7 +85,7 @@ class NextCallerClient(object):
         url = prepare_url(self.base_url, 'users/{0}/'.format(profile_id),
                           url_params=url_params)
         data = prepare_json_data(data)
-        make_http_request(
+        return make_http_request(
             self.auth, url, data=data, method='POST',
             content_type=JSON_CONTENT_TYPE, debug=self.debug
         )
@@ -96,7 +98,7 @@ class NextCallerClient(object):
         :param phone:str    10 digit phone number
         :param kwargs:dict  Additional params for request
 
-        :return:            Serialised response as dictionary
+        :return:dict        Serialised response as dictionary
         """
         validate_phone(phone)
         url_params = dict({
@@ -161,6 +163,8 @@ class NextCallerPlatformClient(NextCallerClient):
         :param data:dict                Data to update as dictionary
         :param platform_username:str    Name of platform user
         :param kwargs:dict              Additional params for request
+
+        :return:str                     HTTP Body of response as text
         """
         platform_username = platform_username or kwargs.get('platform_username')
         if not platform_username:
@@ -218,6 +222,8 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :param platform_username:str    Name of platform user
         :param data:dict                Data to update as dictionary
+
+        :return:str                     HTTP Body of response as text
         """
         if not platform_username:
             raise ValueError('Absent platform_username parameter')
@@ -229,7 +235,7 @@ class NextCallerPlatformClient(NextCallerClient):
             self.base_url, 'platform_users/{0}/'.format(platform_username),
             url_params=url_params)
         data = prepare_json_data(data)
-        make_http_request(
+        return make_http_request(
             self.auth, url, data=data, method='POST',
             content_type=JSON_CONTENT_TYPE, debug=self.debug
         )

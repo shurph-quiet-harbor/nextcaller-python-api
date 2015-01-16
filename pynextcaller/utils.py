@@ -27,6 +27,7 @@ __all__ = (
     'default_handle_response',
     'validate_phone',
     'validate_profile_id',
+    'validate_platform_username',
     'prepare_url',
     'prepare_base_url',
     'prepare_json_data',
