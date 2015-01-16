@@ -9,250 +9,219 @@ class NextCallerClient(object):
     """The NextCaller API client"""
 
     def __init__(self, username, password,
-                 sandbox=False, version=DEFAULT_API_VERSION):
+                 sandbox=False, debug=False):
         """
-        position arguments:
-            username        -- username, api key
-            password        -- password, api secret
+        Initialize NextCaller client with API username
+        and password for Basic Authorization
 
-        Keyword arguments:
-            sandbox         -- [True|False] (default False)
-            version         -- api version (default 'v2')
+        :param username:str     API username
+        :param password:str     API password
+        :param sandbox:bool     If True - sanbox mode is turned on
+        :param debug:bool       If True - all actions will be reflected
+                                in console output
         """
         self.auth = BasicAuth(username, password)
         self.sandbox = bool(sandbox)
-        self.base_url = prepare_base_url(sandbox, version)
+        self.base_url = prepare_base_url(sandbox, DEFAULT_API_VERSION)
+        self.debug = debug
 
     @check_kwargs
     def get_by_phone(self, phone, **kwargs):
-        """Get profiles by a phone
+        """
+        Get profile by a phone number
 
-        position arguments:
-            phone               -- 10 digits phone, str ot int
+        :param phone:str    10 digit phone number
+        :param kwargs:dict  Additional params for request
 
-        Keyword arguments:
-            debug               -- boolean (default True)
-            handler             -- optional function that will be processing
-                                the response.
-                                position arguments: (response)
+        :return:dict        Serialised response as dictionary
         """
         validate_phone(phone)
-        debug = kwargs.pop('debug', None)
-        handler = kwargs.pop('handler', None)
         url_params = dict({
             'phone': phone,
             'format': JSON_RESPONSE_FORMAT,
         }, **kwargs)
         url = prepare_url(self.base_url, 'records/', url_params=url_params)
         response = make_http_request(
-            self.auth, url, method='GET', debug=debug)
-        if not callable(handler):
-            return default_handle_response(response)
-        return handler(response)
+            self.auth, url, method='GET', debug=self.debug)
+        return default_handle_response(response)
 
     @check_kwargs
     def get_by_profile_id(self, profile_id, **kwargs):
-        """Get profile by a profile id
+        """
+        Get profile by a profile id
 
-        position arguments:
-            profile_id          -- Profile identifier, str, length is 30
+        :param profile_id:str   Profile identifier from get_by_phone
+                                response with length in 30 symbols
+        :param kwargs:dict      Additional params for request
 
-        Keyword arguments:
-            debug               -- boolean (default True)
-            handler             -- optional function that will be processing
-                                the response.
-                                position arguments: (response)
+        :return:                Serialised response as dictionary
         """
         validate_profile_id(profile_id)
-        debug = kwargs.pop('debug', None)
-        handler = kwargs.pop('handler', None)
         url_params = dict({
             'format': JSON_RESPONSE_FORMAT
         }, **kwargs)
         url = prepare_url(self.base_url, 'users/{0}/'.format(profile_id),
                           url_params=url_params)
         response = make_http_request(
-            self.auth, url, method='GET', debug=debug)
-        if not callable(handler):
-            return default_handle_response(response)
-        return handler(response)
+            self.auth, url, method='GET', debug=self.debug)
+        return default_handle_response(response)
 
     @check_kwargs
     def update_by_profile_id(self, profile_id, data, **kwargs):
-        """Update profile by a profile id
+        """
+        Update profile by a profile id
 
-        position arguments:
-            profile_id          -- Profile identifier, str, length is 30
-            data                -- dictionary with changed data
-
-        Keyword arguments:
-            debug               -- boolean (default True)
-            handler             -- optional function that will be processing
-                                the response.
-                                position arguments: (response)
+        :param profile_id:str   Profile identifier from get_by_phone
+                                response with length in 30 symbols
+        :param data:dict        Data to update as dictionary
+        :param kwargs:dict      Additional params for request
         """
         validate_profile_id(profile_id)
-        debug = kwargs.pop('debug', None)
-        handler = kwargs.pop('handler', None)
         url_params = dict({
             'format': JSON_RESPONSE_FORMAT
         }, **kwargs)
         url = prepare_url(self.base_url, 'users/{0}/'.format(profile_id),
                           url_params=url_params)
         data = prepare_json_data(data)
-        response = make_http_request(
+        make_http_request(
             self.auth, url, data=data, method='POST',
-            content_type=JSON_CONTENT_TYPE, debug=debug)
-        if not callable(handler):
-            return response
-        return handler(response)
+            content_type=JSON_CONTENT_TYPE, debug=self.debug
+        )
 
     @check_kwargs
     def get_fraud_level(self, phone, **kwargs):
-        """Get fraud level for phone
+        """
+        Get fraud level for a phone number
 
-        position arguments:
-            phone               -- 10 digits phone, str ot int
+        :param phone:str    10 digit phone number
+        :param kwargs:dict  Additional params for request
 
-        Keyword arguments:
-            debug               -- boolean (default True)
-            handler             -- optional function that will be processing
-                                the response.
-                                position arguments: (response)
+        :return:            Serialised response as dictionary
         """
         validate_phone(phone)
-        debug = kwargs.pop('debug', None)
-        handler = kwargs.pop('handler', None)
         url_params = dict({
             'phone': phone,
             'format': JSON_RESPONSE_FORMAT,
         }, **kwargs)
         url = prepare_url(self.base_url, 'fraud/', url_params=url_params)
         response = make_http_request(
-            self.auth, url, method='GET', debug=debug)
-        if not callable(handler):
-            return default_handle_response(response)
-        return handler(response)
+            self.auth, url, method='GET', debug=self.debug)
+        return default_handle_response(response)
 
 
 class NextCallerPlatformClient(NextCallerClient):
     """The NextCaller platform API client"""
 
     @check_kwargs
-    def get_by_phone(self, phone, **kwargs):
-        """Get profiles by a phone
-
-        position arguments:
-            phone               -- 10 digits phone, str ot int
-
-        Keyword arguments:
-            platform_username   -- platform username, str. Mandatory.
-            debug               -- boolean (default True)
-            handler             -- optional function that will be processing
-                                the response.
-                                position arguments: (response)
+    def get_by_phone(self, phone, platform_username, **kwargs):
         """
-        if not kwargs.get('platform_username'):
+        Get profile by a phone number
+
+        :param phone:str                10 digit phone number
+        :param platform_username:str    Name of platform user
+        :param kwargs:dict              Additional params for request
+
+        :return:dict                    Serialised response as dictionary
+        """
+        platform_username = platform_username or kwargs.get('platform_username')
+        if not platform_username:
             raise ValueError('Absent platform_username parameter')
-        return super(NextCallerPlatformClient, self).\
-            get_by_phone(phone, **kwargs)
+        validate_platform_username(platform_username)
+        return super(NextCallerPlatformClient, self).get_by_phone(
+            phone, platform_username=platform_username, **kwargs
+        )
 
     @check_kwargs
-    def get_by_profile_id(self, profile_id, **kwargs):
-        """Get profile by a profile id
-
-        position arguments:
-            profile_id          -- Profile identifier, str, length is 30
-
-        Keyword arguments:
-            platform_username   -- platform username, str. Mandatory.
-            debug               -- boolean (default True)
-            handler             -- optional function that will be processing
-                                the response.
-                                position arguments: (response)
+    def get_by_profile_id(self, profile_id, platform_username, **kwargs):
         """
-        if not kwargs.get('platform_username'):
+        Get profile by a profile id
+
+        :param profile_id:str           Profile identifier from get_by_phone
+                                        response with length in 30 symbols
+        :param platform_username:str    Name of platform user
+        :param kwargs:dict              Additional params for request
+
+        :return:                        Serialised response as dictionary
+        """
+        platform_username = platform_username or kwargs.get('platform_username')
+        if not platform_username:
             raise ValueError('Absent platform_username parameter')
-        return super(NextCallerPlatformClient, self).\
-            get_by_profile_id(profile_id, **kwargs)
+        validate_platform_username(platform_username)
+        return super(NextCallerPlatformClient, self).get_by_profile_id(
+            profile_id, platform_username=platform_username, **kwargs
+        )
 
     @check_kwargs
-    def update_by_profile_id(self, profile_id, data, **kwargs):
-        """Update profile by a profile id
-
-        position arguments:
-            profile_id          -- Profile identifier, str, length is 30
-            data                -- dictionary with changed data
-
-        Keyword arguments:
-            platform_username   -- platform username, str. Mandatory.
-            debug               -- boolean (default True)
-            handler             -- optional function that will be processing
-                                the response.
-                                position arguments: (response)
+    def update_by_profile_id(self, profile_id, data, platform_username, **kwargs):
         """
-        if not kwargs.get('platform_username'):
+        Update profile by a profile id
+
+        :param profile_id:str           Profile identifier from get_by_phone
+                                        response with length in 30 symbols
+        :param data:dict                Data to update as dictionary
+        :param platform_username:str    Name of platform user
+        :param kwargs:dict              Additional params for request
+        """
+        platform_username = platform_username or kwargs.get('platform_username')
+        if not platform_username:
             raise ValueError('Absent platform_username parameter')
-        return super(NextCallerPlatformClient, self).\
-            update_by_profile_id(profile_id, data, **kwargs)
+        validate_platform_username(platform_username)
+        return super(NextCallerPlatformClient, self).update_by_profile_id(
+            profile_id, data, platform_username=platform_username, **kwargs
+        )
 
-    def get_platform_statistics(self, debug=False, handler=None):
-        """Get platform statistics
-
-        Keyword arguments:
-            debug               -- boolean (default True)
-            handler             -- optional function that will be processing
-                                the response.
-                                position arguments: (response)
+    def get_platform_statistics(self, page=1, **kwargs):
         """
-        url_params = {
-            'format': JSON_RESPONSE_FORMAT
-        }
+        Get platform statistics as dictionary
+        with list of platform users
+
+        :param page:int     Number of page with users
+        :param kwargs:dict  Additional params for request
+
+        :return:dict        Dictionary with platform statistic
+        """
+        url_params = dict({
+            'format': JSON_RESPONSE_FORMAT,
+        }, **kwargs)
         url = prepare_url(
-            self.base_url, 'platform_users/', url_params=url_params)
+            self.base_url, 'platform_users/', url_params=url_params, **kwargs)
         response = make_http_request(
-            self.auth, url, method='GET', debug=debug)
-        if not callable(handler):
-            return default_handle_response(response)
-        return handler(response)
+            self.auth, url, method='GET', debug=self.debug)
+        return default_handle_response(response)
 
-    def get_platform_user(self, platform_username, debug=False, handler=None):
-        """Get platform user
-
-        position arguments:
-            platform_username   -- platform username, str.
-
-        Keyword arguments:
-            debug               -- boolean (default True)
-            handler             -- optional function that will be processing
-                                the response.
-                                position arguments: (response)
+    def get_platform_user(self, platform_username, **kwargs):
         """
-        url_params = {
+        Get platform user detail data by platform username
+
+        :param platform_username:str   Name of platform user
+
+        :return:dict                   Platform user detail data
+        """
+        if kwargs.get('platform_username'):
+            platform_username = kwargs.get('platform_username')
+            kwargs.pop('platform_username')
+        if not platform_username:
+            raise ValueError('Absent platform_username parameter')
+        validate_platform_username(platform_username)
+        url_params = dict({
             'format': JSON_RESPONSE_FORMAT
-        }
+        }, **kwargs)
         url_path = 'platform_users/{0}/'.format(platform_username)
         url = prepare_url(self.base_url, url_path, url_params=url_params)
         response = make_http_request(
-            self.auth, url, method='GET', debug=debug)
-        if not callable(handler):
-            return default_handle_response(response)
-        return handler(response)
+            self.auth, url, method='GET', debug=self.debug)
+        return default_handle_response(response)
 
-    def update_platform_user(self, platform_username, data,
-                             debug=False, handler=None):
-        """Update platform user data
-
-        position arguments:
-            platform_username   -- Platform username, str
-            data                -- dictionary with changed data
-
-        Keyword arguments:
-            debug               -- boolean (default True)
-            handler             -- optional function that will be processing
-                                the response.
-                                position arguments: (response)
+    def update_platform_user(self, platform_username, data):
         """
+        Update platform user data
+
+        :param platform_username:str    Name of platform user
+        :param data:dict                Data to update as dictionary
+        """
+        if not platform_username:
+            raise ValueError('Absent platform_username parameter')
+        validate_platform_username(platform_username)
         url_params = {
             'format': JSON_RESPONSE_FORMAT
         }
@@ -260,24 +229,25 @@ class NextCallerPlatformClient(NextCallerClient):
             self.base_url, 'platform_users/{0}/'.format(platform_username),
             url_params=url_params)
         data = prepare_json_data(data)
-        response = make_http_request(
+        make_http_request(
             self.auth, url, data=data, method='POST',
-            content_type=JSON_CONTENT_TYPE, debug=debug)
-        if not callable(handler):
-            return response
-        return handler(response)
+            content_type=JSON_CONTENT_TYPE, debug=self.debug
+        )
 
-    def get_fraud_level(self, phone, **kwargs):
-        """Get fraud level for phone
-
-        position arguments:
-            phone               -- 10 digits phone, str ot int
-
-        Keyword arguments:
-            debug               -- boolean (default True)
-            handler             -- optional function that will be processing
-                                the response.
-                                position arguments: (response)
+    def get_fraud_level(self, phone, platform_username, **kwargs):
         """
-        return super(NextCallerPlatformClient, self).\
-            get_fraud_level(phone, **kwargs)
+        Get fraud level for a phone
+
+        :param phone:str                10 digit phone number
+        :param platform_username:str    Name of platform user
+        :param kwargs:dict              Additional params for request
+
+        :return:dict                    Serialised response as dictionary
+        """
+        platform_username = platform_username or kwargs.get('platform_username')
+        if not platform_username:
+            raise ValueError('Absent platform_username parameter')
+        validate_platform_username(platform_username)
+        return super(NextCallerPlatformClient, self).get_fraud_level(
+            phone, platform_username=platform_username, **kwargs
+        )

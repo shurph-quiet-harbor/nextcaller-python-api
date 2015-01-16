@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 import functools
 import json
+import re
 try:
     from urllib import urlencode
 except ImportError:
@@ -83,6 +84,28 @@ def validate_profile_id(value, length=DEFAULT_PROFILE_ID_LENGTH):
         raise ValueError(
             'Invalid profile id: {0}. Profile id should has length {1}.'.
             format(value, length))
+
+
+def validate_platform_username(value, max_length=MAX_PLATFORM_USERNAME_LENGTH):
+    """Validate platform username"""
+    if not value:
+        raise ValueError(
+            'Invalid platform username: {0}. '
+            'Username cannot be blank.'.format(value))
+    if not isinstance(value, basestring):
+        raise ValueError(
+            'Invalid platform username: {0}. '
+            'Username cannot be type of {1}.'.format(value, type(value)))
+    if len(value) > max_length:
+        raise ValueError(
+            'Invalid platform username: {0}. '
+            'Username should has length less '
+            'than {1} symbols.'.format(value, max_length))
+    if not re.match('^[a-z0-9_]+$', value):
+        raise ValueError(
+            'Invalid platform username: {0}. '
+            'Letters, numbers and underscores '
+            'at lower case are allowed for username.'.format(value))
 
 
 def prepare_url(base_url, path, url_params=None):
