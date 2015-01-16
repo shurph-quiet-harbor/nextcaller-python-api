@@ -2,6 +2,7 @@
 import sys
 import io
 import os
+import multiprocessing
 from ez_setup import use_setuptools
 use_setuptools()
 from setuptools import setup, find_packages
