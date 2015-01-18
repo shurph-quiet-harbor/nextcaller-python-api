@@ -196,7 +196,7 @@ class NextCallerPlatformClient(NextCallerClient):
         return super(NextCallerPlatformClient, self).\
             update_by_profile_id(profile_id, data, **kwargs)
 
-    def get_platform_statistics(self, debug=False, handler=None):
+    def get_platform_statistics(self, page=1, debug=False, handler=None):
         """Get platform statistics
 
         Keyword arguments:
@@ -205,8 +205,11 @@ class NextCallerPlatformClient(NextCallerClient):
                                 the response.
                                 position arguments: (response)
         """
+        if not isinstance(page, int) or page < 1:
+            raise ValueError('Wrong page parameter: {}'.format(page))
         url_params = {
-            'format': JSON_RESPONSE_FORMAT
+            'format': JSON_RESPONSE_FORMAT,
+            'page': page
         }
         url = prepare_url(
             self.base_url, 'platform_users/', url_params=url_params)
