@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 
 __author__ = 'Igor Nemilentsev'
 __author_email__ = 'trezorg@gmail.com'
-__version__ = '0.0.7'
+__version__ = '0.0.8'
 tests_require = ['nose']
 
 
