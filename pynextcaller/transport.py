@@ -76,7 +76,7 @@ def _build_headers(auth, user_agent=None, content_type=None):
     headers = auth.get_headers()
     headers['Connection'] = 'Keep-Alive'
     if content_type is not None:
-        headers['ContentType'] = content_type
+        headers['Content-Type'] = content_type
     if user_agent is not None:
         headers['User-Agent'] = user_agent
     return headers

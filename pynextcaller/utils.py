@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 import functools
 import json
+import re
 try:
     from urllib import urlencode
 except ImportError:
@@ -26,6 +27,7 @@ __all__ = (
     'default_handle_response',
     'validate_phone',
     'validate_profile_id',
+    'validate_platform_username',
     'prepare_url',
     'prepare_base_url',
     'prepare_json_data',
@@ -85,6 +87,28 @@ def validate_profile_id(value, length=DEFAULT_PROFILE_ID_LENGTH):
             format(value, length))
 
 
+def validate_platform_username(value, max_length=MAX_PLATFORM_USERNAME_LENGTH):
+    """Validate platform username"""
+    if not value:
+        raise ValueError(
+            'Invalid platform username: {0}. '
+            'Username cannot be blank.'.format(value))
+    if not isinstance(value, basestring):
+        raise ValueError(
+            'Invalid platform username: {0}. '
+            'Username cannot be type of {1}.'.format(value, type(value)))
+    if len(value) > max_length:
+        raise ValueError(
+            'Invalid platform username: {0}. '
+            'Username should has length less '
+            'than {1} symbols.'.format(value, max_length))
+    if not re.match('^[a-z0-9_]+$', value):
+        raise ValueError(
+            'Invalid platform username: {0}. '
+            'Letters, numbers and underscores '
+            'at lower case are allowed for username.'.format(value))
+
+
 def prepare_url(base_url, path, url_params=None):
     """Prepare url from path and params"""
     if url_params is None:
@@ -119,4 +143,4 @@ def check_kwargs(*all_args):
     return dec
 
 
-check_kwargs = check_kwargs('debug', 'handler', 'data', 'platform_username')
+check_kwargs = check_kwargs('data', 'platform_username')

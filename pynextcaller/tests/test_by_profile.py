@@ -1,7 +1,10 @@
 from __future__ import unicode_literals
 import json
 import unittest
-from .base import BaseTestCase
+try:
+    from .base import BaseTestCase
+except (ValueError, ImportError):
+    from pynextcaller.tests.base import BaseTestCase
 
 
 PROFILE_JSON_REQUEST_EXAMPLE = {

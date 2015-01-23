@@ -2,13 +2,14 @@
 import sys
 import io
 import os
+import multiprocessing
 from ez_setup import use_setuptools
 use_setuptools()
 from setuptools import setup, find_packages
 
 __author__ = 'Igor Nemilentsev'
 __author_email__ = 'trezorg@gmail.com'
-__version__ = '0.0.8'
+__version__ = '0.0.9'
 tests_require = ['nose']
 
 
