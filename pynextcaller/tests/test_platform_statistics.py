@@ -5,8 +5,12 @@ try:
     from unittest import mock
 except ImportError:
     import mock
-from .base import BasePlatformTestCase
-from .test_by_phone import PHONE_JSON_RESULT_EXAMPLE
+try:
+    from .base import BasePlatformTestCase
+    from .test_by_phone import PHONE_JSON_RESULT_EXAMPLE
+except (ValueError, ImportError):
+    from pynextcaller.tests.base import BasePlatformTestCase
+    from pynextcaller.tests.test_by_phone import PHONE_JSON_RESULT_EXAMPLE
 
 
 PLATFORM_STATISTICS_JSON_RESULT_EXAMPLE = '''
@@ -93,7 +97,7 @@ class PlatformTestCase(BasePlatformTestCase):
 
     def test_get_by_phone_without_platform_username(self):
         phone = 1231231231
-        self.assertRaises(ValueError, self.client.get_by_phone, phone)
+        self.assertRaises(TypeError, self.client.get_by_phone, phone)
 
     def test_get_by_phone_with_platform_username(self):
         phone = 1231231231

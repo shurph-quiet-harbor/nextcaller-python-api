@@ -15,12 +15,16 @@ username = 'XXXXX'
 password = 'XXXXX'
 platform_username = 'test'
 sandbox = True
+debug = True
 
-client = NextCallerPlatformClient(username, password, sandbox=sandbox)
+client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
 
 try:
-    response_content = client.get_platform_user(platform_username, debug=True)
+    data = {'email': 'test@test.com'}
+    response_content = client.update_platform_user(platform_username, data)
     logger.info(response_content)
+except ValueError as err:
+    logger.error('Validation Error: {}'.format(err))
 except HTTPError as err:
     response = err.response
     response_code = response.status_code

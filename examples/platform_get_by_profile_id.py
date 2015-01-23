@@ -13,16 +13,15 @@ handler.setFormatter(formatter)
 username = 'XXXXX'
 password = 'XXXXX'
 sandbox = True
-phone_number = '1211211212'
-platform_username = 'test'
+debug = True
 profile_id = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+platform_username = 'test'
 
-client = NextCallerPlatformClient(username, password, sandbox=sandbox)
+client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
 
 # get by profile id
 try:
-    response_content = client.get_by_profile_id(
-        profile_id, platform_username=platform_username, debug=True)
+    response_content = client.get_by_profile_id(profile_id, platform_username)
     logger.info(response_content)
 except ValueError as err:
     logger.error('Validation Error: {}'.format(err))
