@@ -8,6 +8,22 @@ DEFAULT_USER_AGENT = 'nextcaller/python/0.0.1'
 JSON_CONTENT_TYPE = 'application/json; charset=utf-8'
 
 # urls
-DEFAULT_API_VERSION = 'v2'
-BASE_URL = 'https://api.nextcaller.com/{0}/'
-BASE_SANDBOX_URL = 'https://api.sandbox.nextcaller.com/{0}/'
+DEFAULT_API_VERSION = '2'
+BASE_URL = 'https://api.nextcaller.com/v{0}/'
+BASE_SANDBOX_URL = 'https://api.sandbox.nextcaller.com/v{0}/'
+
+# address
+ADDRESS_MANDATORY_FIELDS = (
+    'first_name',
+    'last_name',
+    'address',
+)
+
+ADDRESS_ALLOWED_FIELDS = ADDRESS_MANDATORY_FIELDS + (
+    'city',
+    'state',
+    'zip_code',
+    'middle_name',
+    'apt_suite',
+    'extended_zip',
+)

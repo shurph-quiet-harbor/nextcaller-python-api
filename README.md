@@ -25,11 +25,11 @@ Installation
 
 *use pip with the GitHub repo*:
     
-    $ pip install -U --user git+git://github.com/nextcaller/nextcaller-python-api.git
+    $ pip install -U git+git://github.com/nextcaller/nextcaller-python-api.git
 
 *use pip with pypi*:
 
-    $ pip install -U --user pynextcaller
+    $ pip install -U pynextcaller
 
 Documentation
 ------------

@@ -2,9 +2,9 @@ from __future__ import unicode_literals
 import json
 import unittest
 try:
-    from .base import BaseTestCase
+    from .base import BaseTestCase, BasePlatformTestCase
 except (ValueError, ImportError):
-    from pynextcaller.tests.base import BaseTestCase
+    from pynextcaller.tests.base import BaseTestCase, BasePlatformTestCase
 
 
 PROFILE_JSON_REQUEST_EXAMPLE = {
@@ -43,11 +43,11 @@ PROFILE_JSON_RESULT_EXAMPLE = '''
     "spoof": "false",
     "phone": [
         {
-            "number": "2125558383"
+            "number": "2125558383",
+            "carrier": "Verizon Wireless",
+            "line_type": "LAN"
         }
     ],
-    "carrier": "Verizon Wireless",
-    "line_type": "LAN",
     "address": [
         {
             "city": "New York",
@@ -131,6 +131,38 @@ class ProfileTestCase(BaseTestCase):
         self.patch_http_request(fake_response)
         res = self.client.update_by_profile_id(
             profile_id, data=PROFILE_JSON_WRONG_REQUEST_EXAMPLE)
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(
+            json.loads(res.content)['error']['description']['email'][0],
+            'Invalid email address')
+
+
+class PlatformProfileTestCase(BasePlatformTestCase):
+
+    def test_profile_get_request(self):
+        profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
+        self.patch_http_request(PROFILE_JSON_RESULT_EXAMPLE)
+        res = self.client.get_by_profile_id(profile_id, self.platform_username)
+        self.assertEqual(res['email'], 'demo@nextcaller.com')
+        self.assertEqual(res['first_name'], 'Jerry')
+        self.assertEqual(res['last_name'], 'Seinfeld')
+
+    def test_profile_update_request(self):
+        profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
+        self.patch_http_request(self.fake_response)
+        res = self.client.update_by_profile_id(
+            profile_id, PROFILE_JSON_REQUEST_EXAMPLE, self.platform_username)
+        self.assertEqual(res.status_code, 204)
+
+    def test_profile_update_wrong_request(self):
+        profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
+        fake_response = self.FakeResponse()
+        fake_response.status_code = 400
+        fake_response.content = PROFILE_JSON_WRONG_RESULT
+        self.patch_http_request(fake_response)
+        res = self.client.update_by_profile_id(
+            profile_id, PROFILE_JSON_WRONG_REQUEST_EXAMPLE,
+            self.platform_username)
         self.assertEqual(res.status_code, 400)
         self.assertEqual(
             json.loads(res.content)['error']['description']['email'][0],

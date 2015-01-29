@@ -42,6 +42,7 @@ class BasePlatformTestCase(BaseTestCase):
     def setUp(self):
         username = 'username'
         password = 'password'
+        self.platform_username = 'test_username'
         self.api_request = transport.api_request
         self.mock = mock.Mock()
         transport.api_request = self.mock

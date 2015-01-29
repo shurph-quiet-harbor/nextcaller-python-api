@@ -8,7 +8,7 @@ from .transport import make_http_request
 class NextCallerClient(object):
     """The NextCaller API client"""
 
-    def __init__(self, username, password,
+    def __init__(self, username, password, version=DEFAULT_API_VERSION,
                  sandbox=False, debug=False):
         """
         Initialize NextCaller client with API username
@@ -16,13 +16,14 @@ class NextCallerClient(object):
 
         :param username:str     API username
         :param password:str     API password
-        :param sandbox:bool     If True - sanbox mode is turned on
+        :param version:str      API version
+        :param sandbox:bool     If True - sandbox mode is turned on
         :param debug:bool       If True - all actions will be reflected
                                 in console output
         """
         self.auth = BasicAuth(username, password)
         self.sandbox = bool(sandbox)
-        self.base_url = prepare_base_url(sandbox, DEFAULT_API_VERSION)
+        self.base_url = prepare_base_url(sandbox, version)
         self.debug = debug
 
     @check_kwargs
@@ -33,7 +34,7 @@ class NextCallerClient(object):
         :param phone:str    10 digit phone number
         :param kwargs:dict  Additional params for request
 
-        :return:dict        Serialised response as dictionary
+        :return:list        Serialised response as list
         """
         validate_phone(phone)
         url_params = dict({
@@ -62,6 +63,27 @@ class NextCallerClient(object):
         }, **kwargs)
         url = prepare_url(self.base_url, 'users/{0}/'.format(profile_id),
                           url_params=url_params)
+        response = make_http_request(
+            self.auth, url, method='GET', debug=self.debug)
+        return default_handle_response(response)
+
+    @check_kwargs
+    def get_by_address_name(self, data, **kwargs):
+        """
+        Get profile by an address
+
+        :param data:dict        Profile identifier from get_by_phone
+                                response with length in 30 symbols
+        :param kwargs:dict      Additional params for request
+
+        :return:dict            Serialised response as dictionary
+        """
+        clean_data = validate_address(data)
+        clean_data.update(kwargs)
+        url_params = dict({
+            'format': JSON_RESPONSE_FORMAT
+        }, **clean_data)
+        url = prepare_url(self.base_url, 'records/', url_params=url_params)
         response = make_http_request(
             self.auth, url, method='GET', debug=self.debug)
         return default_handle_response(response)
@@ -123,11 +145,8 @@ class NextCallerPlatformClient(NextCallerClient):
         :param platform_username:str    Name of platform user
         :param kwargs:dict              Additional params for request
 
-        :return:dict                    Serialised response as dictionary
+        :return:list                    Serialised response as list
         """
-        platform_username = platform_username or kwargs.get('platform_username')
-        if not platform_username:
-            raise ValueError('Absent platform_username parameter')
         validate_platform_username(platform_username)
         return super(NextCallerPlatformClient, self).get_by_phone(
             phone, platform_username=platform_username, **kwargs
@@ -143,14 +162,28 @@ class NextCallerPlatformClient(NextCallerClient):
         :param platform_username:str    Name of platform user
         :param kwargs:dict              Additional params for request
 
-        :return:                        Serialised response as dictionary
+        :return:dict                    Serialised response as dictionary
         """
-        platform_username = platform_username or kwargs.get('platform_username')
-        if not platform_username:
-            raise ValueError('Absent platform_username parameter')
         validate_platform_username(platform_username)
         return super(NextCallerPlatformClient, self).get_by_profile_id(
             profile_id, platform_username=platform_username, **kwargs
+        )
+
+    @check_kwargs
+    def get_by_address_name(self, data, platform_username, **kwargs):
+        """
+        Get profile by an address
+
+        :param data:dict                Profile identifier from get_by_phone
+                                        response with length in 30 symbols
+        :param platform_username:str    Name of platform user
+        :param kwargs:dict              Additional params for request
+
+        :return:dict                    Serialised response as dictionary
+        """
+        validate_platform_username(platform_username)
+        return super(NextCallerPlatformClient, self).get_by_address_name(
+            data, platform_username=platform_username, **kwargs
         )
 
     @check_kwargs
@@ -167,9 +200,6 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:str                     HTTP Body of response as text
         """
-        platform_username = platform_username or kwargs.get('platform_username')
-        if not platform_username:
-            raise ValueError('Absent platform_username parameter')
         validate_platform_username(platform_username)
         return super(NextCallerPlatformClient, self).update_by_profile_id(
             profile_id, data, platform_username=platform_username, **kwargs
@@ -203,11 +233,6 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:dict                   Platform user detail data
         """
-        if kwargs.get('platform_username'):
-            platform_username = kwargs.get('platform_username')
-            kwargs.pop('platform_username')
-        if not platform_username:
-            raise ValueError('Absent platform_username parameter')
         validate_platform_username(platform_username)
         url_params = dict({
             'format': JSON_RESPONSE_FORMAT
@@ -227,8 +252,6 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:str                     HTTP Body of response as text
         """
-        if not platform_username:
-            raise ValueError('Absent platform_username parameter')
         validate_platform_username(platform_username)
         url_params = {
             'format': JSON_RESPONSE_FORMAT
@@ -252,9 +275,6 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:dict                    Serialised response as dictionary
         """
-        platform_username = platform_username or kwargs.get('platform_username')
-        if not platform_username:
-            raise ValueError('Absent platform_username parameter')
         validate_platform_username(platform_username)
         return super(NextCallerPlatformClient, self).get_fraud_level(
             phone, platform_username=platform_username, **kwargs
