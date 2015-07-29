@@ -245,7 +245,7 @@ class NextCallerPlatformClient(NextCallerClient):
             self.auth, url, method='GET', debug=self.debug)
         return default_handle_response(response)
 
-    def get_platform_user(self, account_id, **kwargs):
+    def get_platform_account(self, account_id, **kwargs):
         """
         Get platform account detail data by account ID
 
@@ -263,7 +263,7 @@ class NextCallerPlatformClient(NextCallerClient):
             self.auth, url, method='GET', debug=self.debug)
         return default_handle_response(response)
 
-    def update_platform_user(self, account_id, data):
+    def update_platform_account(self, account_id, data):
         """
         Update platform account data
 
