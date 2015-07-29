@@ -106,24 +106,24 @@ class PlatformPhoneTestCase(BasePlatformTestCase):
         phone = '212555838'
         self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
         self.assertRaises(ValueError, self.client.get_by_phone,
-                          phone, self.platform_username)
+                          phone, self.account_id)
 
     def test_by_wrong_phone(self):
         phone = 'XXXXXXXXXX'
         self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
         self.assertRaises(ValueError, self.client.get_by_phone,
-                          phone, self.platform_username)
+                          phone, self.account_id)
 
     def test_by_wrong_argument(self):
         phone = '1231231231'
         self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
         self.assertRaises(ValueError, self.client.get_by_phone, phone,
-                          self.platform_username, x='xx')
+                          self.account_id, x='xx')
 
     def test_by_phone(self):
         phone = '2125558383'
         self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
-        res = self.client.get_by_phone(phone, self.platform_username)
+        res = self.client.get_by_phone(phone, self.account_id)
         self.assertTrue(res['records'])
         self.assertEqual(res['records'][0]['email'], 'demo@nextcaller.com')
         self.assertEqual(res['records'][0]['first_name'], 'Jerry')

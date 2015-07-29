@@ -17,67 +17,69 @@ PLATFORM_STATISTICS_JSON_RESULT_EXAMPLE = '''
 {
     "object_list": [
         {
-            "username": "test",
+            "id": "test",
             "first_name": "",
             "last_name": "",
             "company_name": "",
             "email": "",
             "number_of_operations": 3,
-            "successful_calls": {
+            "billed_operations": {
                 "201411": 3
             },
-            "total_calls": {
+            "total_operations": {
                 "201411": 3
             },
-            "created_time": "2014-11-13 06:07:19.836404",
-            "resource_uri": "/v2/platform_users/test/"
+            "object": "account",
+            "resource_uri": "/v2/accounts/test/"
         }
     ],
-   "page": 1,
+    "page": 1,
     "has_next": false,
     "total_pages": 1,
-    "total_platform_calls": {
+    "object": "page",
+    "total_platform_operations": {
         "2014-11": 3
     },
-    "successful_platform_calls": {
+    "billed_platform_operations": {
         "2014-11": 3
     }
 }
 '''
 
 
-PLATFORM_STATISTICS_USER_JSON_RESULT_EXAMPLE = '''
+PLATFORM_STATISTICS_ACCOUNT_JSON_RESULT_EXAMPLE = '''
 {
-    "username": "test",
+    "id": "test",
     "first_name": "",
     "last_name": "",
     "company_name": "",
     "email": "",
     "number_of_operations": 3,
-    "successful_calls": {
+    "billed_operations": {
         "201411": 3
     },
-    "total_calls": {
+    "total_operations": {
         "201411": 3
     },
-    "resource_uri": "/v2/platform_users/test/"
+    "object": "account",
+    "resource_uri": "/v2/accounts/test/"
 }
 '''
 
-PLATFORM_USERNAME_JSON_REQUEST_EXAMPLE = {
+PLATFORM_ACCOUNT_JSON_REQUEST_EXAMPLE = {
     "first_name": "Clark",
     "last_name": "Kent",
     "email": "test@test.com"
 }
 
-PLATFORM_USERNAME_WRONG_JSON_REQUEST_EXAMPLE = {
+PLATFORM_ACCOUNT_WRONG_JSON_REQUEST_EXAMPLE = {
     "first_name": "Clark",
     "last_name": "Kent",
     "email": "XXXX"
 }
 
 
-PLATFORM_USERNAME_WRONG_RESULT = '''
+PLATFORM_ACCOUNT_WRONG_RESULT = '''
 {
     "error": {
         "message": "Validation Error",
@@ -95,15 +97,15 @@ PLATFORM_USERNAME_WRONG_RESULT = '''
 
 class PlatformTestCase(BasePlatformTestCase):
 
-    def test_get_by_phone_without_platform_username(self):
+    def test_get_by_phone_without_account_id(self):
         phone = 1231231231
         self.assertRaises(TypeError, self.client.get_by_phone, phone)
 
-    def test_get_by_phone_with_platform_username(self):
+    def test_get_by_phone_with_account_id(self):
         phone = 1231231231
-        platform_user = 'test_username'
+        account_id = 'test_username'
         self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
-        res = self.client.get_by_phone(phone, platform_username=platform_user)
+        res = self.client.get_by_phone(phone, account_id=account_id)
         self.assertTrue(res['records'])
         self.assertEqual(res['records'][0]['email'], 'demo@nextcaller.com')
         self.assertEqual(res['records'][0]['first_name'], 'Jerry')
@@ -112,33 +114,33 @@ class PlatformTestCase(BasePlatformTestCase):
     def test_get_all_statistics(self):
         self.patch_http_request(PLATFORM_STATISTICS_JSON_RESULT_EXAMPLE)
         res = self.client.get_platform_statistics()
-        self.assertTrue(res['successful_platform_calls'])
-        self.assertTrue(res['total_platform_calls'])
-        self.assertEqual(res['object_list'][0]['username'], 'test')
+        self.assertTrue(res['billed_platform_operations'])
+        self.assertTrue(res['total_platform_operations'])
+        self.assertEqual(res['object_list'][0]['id'], 'test')
         self.assertEqual(res['object_list'][0]['number_of_operations'], 3)
 
     def test_get_users_statistics(self):
-        self.patch_http_request(PLATFORM_STATISTICS_USER_JSON_RESULT_EXAMPLE)
-        res = self.client.get_platform_user('test')
-        self.assertEqual(res['username'], 'test')
+        self.patch_http_request(PLATFORM_STATISTICS_ACCOUNT_JSON_RESULT_EXAMPLE)
+        res = self.client.get_platform_account('test')
+        self.assertEqual(res['id'], 'test')
         self.assertEqual(res['number_of_operations'], 3)
 
-    def test_update_platform_user(self):
-        platform_username = 'test_username'
+    def test_update_platform_account(self):
+        account_id = 'test_username'
         self.patch_http_request(self.fake_response)
-        res = self.client.update_platform_user(
-            platform_username, data=PLATFORM_USERNAME_JSON_REQUEST_EXAMPLE)
+        res = self.client.update_platform_account(
+            account_id, data=PLATFORM_ACCOUNT_JSON_REQUEST_EXAMPLE)
         self.assertEqual(res.status_code, 204)
 
-    def test_update_wrong_platform_user(self):
-        platform_username = 'test_username'
+    def test_update_wrong_platform_account(self):
+        account_id = 'test_username'
         fake_response = self.FakeResponse()
         fake_response.status_code = 400
-        fake_response.content = PLATFORM_USERNAME_WRONG_RESULT
+        fake_response.content = PLATFORM_ACCOUNT_WRONG_RESULT
         self.patch_http_request(fake_response)
-        res = self.client.update_platform_user(
-            platform_username,
-            data=PLATFORM_USERNAME_WRONG_JSON_REQUEST_EXAMPLE)
+        res = self.client.update_platform_account(
+            account_id,
+            data=PLATFORM_ACCOUNT_WRONG_JSON_REQUEST_EXAMPLE)
         self.assertEqual(res.status_code, 400)
         self.assertEqual(
             json.loads(res.content)['error']['description']['email'][0],
