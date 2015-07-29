@@ -136,6 +136,22 @@ class NextCallerClient(object):
 class NextCallerPlatformClient(NextCallerClient):
     """The NextCaller platform API client"""
 
+    def __init__(self, username, password, version=DEFAULT_API_VERSION,
+                 sandbox=False, debug=False):
+        """
+        Initialize NextCaller client with API username
+        and password for Basic Authorization
+
+        :param username:str     API username
+        :param password:str     API password
+        :param version:str      API version
+        :param sandbox:bool     If True - sandbox mode is turned on
+        :param debug:bool       If True - all actions will be reflected
+                                in console output
+        """
+        super(NextCallerPlatformClient, self).__init__(username, password, version, sandbox, debug)
+        self.auth = PlatformBasicAuth(username, password)
+
     @check_kwargs
     def get_by_phone(self, phone, account_id, **kwargs):
         """
@@ -148,9 +164,10 @@ class NextCallerPlatformClient(NextCallerClient):
         :return:list                    Serialised response as list
         """
         validate_account_id(account_id)
-        return super(NextCallerPlatformClient, self).get_by_phone(
-            phone, account_id=account_id, **kwargs
-        )
+        with PlatformAuthContextManager(self.auth, account_id):
+            return super(NextCallerPlatformClient, self).get_by_phone(
+                phone, account_id=account_id, **kwargs
+            )
 
     @check_kwargs
     def get_by_profile_id(self, profile_id, account_id, **kwargs):
@@ -165,9 +182,10 @@ class NextCallerPlatformClient(NextCallerClient):
         :return:dict                    Serialised response as dictionary
         """
         validate_account_id(account_id)
-        return super(NextCallerPlatformClient, self).get_by_profile_id(
-            profile_id, account_id=account_id, **kwargs
-        )
+        with PlatformAuthContextManager(self.auth, account_id):
+            return super(NextCallerPlatformClient, self).get_by_profile_id(
+                profile_id, account_id=account_id, **kwargs
+            )
 
     @check_kwargs
     def get_by_address_name(self, data, account_id, **kwargs):
@@ -182,9 +200,10 @@ class NextCallerPlatformClient(NextCallerClient):
         :return:dict                    Serialised response as dictionary
         """
         validate_account_id(account_id)
-        return super(NextCallerPlatformClient, self).get_by_address_name(
-            data, account_id=account_id, **kwargs
-        )
+        with PlatformAuthContextManager(self.auth, account_id):
+            return super(NextCallerPlatformClient, self).get_by_address_name(
+                data, account_id=account_id, **kwargs
+            )
 
     @check_kwargs
     def update_by_profile_id(self, profile_id, data,
@@ -201,9 +220,10 @@ class NextCallerPlatformClient(NextCallerClient):
         :return:str                     HTTP Body of response as text
         """
         validate_account_id(account_id)
-        return super(NextCallerPlatformClient, self).update_by_profile_id(
-            profile_id, data, account_id=account_id, **kwargs
-        )
+        with PlatformAuthContextManager(self.auth, account_id):
+            return super(NextCallerPlatformClient, self).update_by_profile_id(
+                profile_id, data, account_id=account_id, **kwargs
+            )
 
     def get_platform_statistics(self, page=1, **kwargs):
         """
@@ -220,7 +240,7 @@ class NextCallerPlatformClient(NextCallerClient):
             'format': JSON_RESPONSE_FORMAT,
         }, **kwargs)
         url = prepare_url(
-            self.base_url, 'platform_users/', url_params=url_params)
+            self.base_url, 'accounts/', url_params=url_params)
         response = make_http_request(
             self.auth, url, method='GET', debug=self.debug)
         return default_handle_response(response)
@@ -237,7 +257,7 @@ class NextCallerPlatformClient(NextCallerClient):
         url_params = dict({
             'format': JSON_RESPONSE_FORMAT
         }, **kwargs)
-        url_path = 'platform_users/{0}/'.format(account_id)
+        url_path = 'accounts/{0}/'.format(account_id)
         url = prepare_url(self.base_url, url_path, url_params=url_params)
         response = make_http_request(
             self.auth, url, method='GET', debug=self.debug)
@@ -257,7 +277,7 @@ class NextCallerPlatformClient(NextCallerClient):
             'format': JSON_RESPONSE_FORMAT
         }
         url = prepare_url(
-            self.base_url, 'platform_users/{0}/'.format(account_id),
+            self.base_url, 'accounts/{0}/'.format(account_id),
             url_params=url_params)
         data = prepare_json_data(data)
         return make_http_request(
