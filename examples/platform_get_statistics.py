@@ -13,7 +13,7 @@ handler.setFormatter(formatter)
 
 username = 'XXXXX'
 password = 'XXXXX'
-platform_username = 'test'
+account_id = 'test'
 sandbox = True
 debug = True
 

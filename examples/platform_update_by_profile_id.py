@@ -15,14 +15,14 @@ password = 'XXXXX'
 sandbox = True
 debug = True
 profile_id = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-platform_username = 'test'
+account_id = 'test'
 
 client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
 
 # update by profile id
 try:
     data = {'email': 'test@test.com'}
-    client.update_by_profile_id(profile_id, data, platform_username)
+    client.update_by_profile_id(profile_id, data, account_id)
 except ValueError as err:
     logger.error('Validation Error: {}'.format(err))
 except HTTPError as err:

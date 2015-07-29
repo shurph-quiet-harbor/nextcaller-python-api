@@ -13,18 +13,17 @@ handler.setFormatter(formatter)
 
 username = 'XXXXX'
 password = 'XXXXX'
-platform_username = 'test'
+account_id = 'test'
 sandbox = True
-debug = True
+data = {
+    'email': 'test@test.com'
+}
 
-client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
+client = NextCallerPlatformClient(username, password, sandbox=sandbox)
 
 try:
-    data = {'email': 'test@test.com'}
-    response_content = client.update_platform_user(platform_username, data)
+    response_content = client.update_platform_account(account_id, data, debug=True)
     logger.info(response_content)
-except ValueError as err:
-    logger.error('Validation Error: {}'.format(err))
 except HTTPError as err:
     response = err.response
     response_code = response.status_code

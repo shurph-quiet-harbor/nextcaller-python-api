@@ -15,13 +15,13 @@ password = 'XXXXX'
 sandbox = True
 debug = True
 phone_number = '1211211212'
-platform_username = 'test'
+account_id = 'test'
 
 client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
 
 # get by phone
 try:
-    response_content = client.get_by_phone(phone_number, platform_username)
+    response_content = client.get_by_phone(phone_number, account_id)
     logger.info(response_content)
 except ValueError as err:
     logger.error('Validation Error: {}'.format(err))
