@@ -24,10 +24,10 @@ PLATFORM_STATISTICS_JSON_RESULT_EXAMPLE = '''
             "email": "",
             "number_of_operations": 3,
             "billed_operations": {
-                "201411": 3
+                "2014-11": 3
             },
             "total_operations": {
-                "201411": 3
+                "2014-11": 3
             },
             "object": "account",
             "resource_uri": "/v2/accounts/test/"
@@ -56,10 +56,10 @@ PLATFORM_STATISTICS_ACCOUNT_JSON_RESULT_EXAMPLE = '''
     "email": "",
     "number_of_operations": 3,
     "billed_operations": {
-        "201411": 3
+        "2014-11": 3
     },
     "total_operations": {
-        "201411": 3
+        "2014-11": 3
     },
     "object": "account",
     "resource_uri": "/v2/accounts/test/"
