@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from base64 import b64encode
-from .constants import DEFAULT_PLATFROM_ACCOUNT_HEADER , DEFAULT_PLATFROM_ACCOUNT_ID
+from .constants import DEFAULT_PLATFORM_ACCOUNT_HEADER , DEFAULT_PLATFORM_ACCOUNT_ID
 
 
 __all__ = (
@@ -33,11 +33,11 @@ class PlatformBasicAuth(BasicAuth):
 
     def __init__(self, username, password):
         super(PlatformBasicAuth, self).__init__(username, password)
-        self.account_id = DEFAULT_PLATFROM_ACCOUNT_ID
+        self.account_id = DEFAULT_PLATFORM_ACCOUNT_ID
 
     def get_headers(self):
         base_headers = super(PlatformBasicAuth, self).get_headers()
-        base_headers.update({DEFAULT_PLATFROM_ACCOUNT_HEADER: self.account_id})
+        base_headers.update({DEFAULT_PLATFORM_ACCOUNT_HEADER: self.account_id})
         return base_headers
 
     def switch_account_id(self, account_id):
@@ -58,4 +58,4 @@ class PlatformAuthContextManager(object):
         self.auth.switch_account_id(self.account_id)
 
     def __exit__(self, exp_type, exp_value, traceback):
-        self.auth.switch_account_id(DEFAULT_PLATFROM_ACCOUNT_ID)
+        self.auth.switch_account_id(DEFAULT_PLATFORM_ACCOUNT_ID)
