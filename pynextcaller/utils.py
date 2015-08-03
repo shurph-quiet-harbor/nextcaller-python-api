@@ -149,22 +149,22 @@ def validate_account_id(value, max_length=MAX_ACCOUNT_ID_LENGTH):
     """Validate platform username"""
     if not value:
         raise ValueError(
-            'Invalid platform username: {0}. '
-            'Username cannot be blank.'.format(value))
+            'Account ID cannot be blank.'.format(value)
+        )
     if not isinstance(value, basestring):
         raise ValueError(
-            'Invalid platform username: {0}. '
-            'Username cannot be type of {1}.'.format(value, type(value)))
+            'Invalid account ID: {0}. Account ID cannot be type of {1}.'.format(value, type(value))
+        )
     if len(value) > max_length:
         raise ValueError(
-            'Invalid platform username: {0}. '
-            'Username should has length less '
-            'than {1} symbols.'.format(value, max_length))
-    if not re.match('^[a-z0-9_]+$', value):
+            'Invalid account ID: {0}. Account ID should has length less than {1} symbols.'.format(value, max_length)
+        )
+    if not re.match('^.+@.+\..{2,}$', value) and not re.match('^\w+$', value):
         raise ValueError(
-            'Invalid platform username: {0}. '
-            'Letters, numbers and underscores '
-            'at lower case are allowed for username.'.format(value))
+            'Invalid account ID: {0}. '
+            'Letters, numbers and underscores at lower case '
+            'or valid email addresses are allowed for account ID.'.format(value)
+        )
 
 
 def prepare_url(base_url, path, url_params=None):
