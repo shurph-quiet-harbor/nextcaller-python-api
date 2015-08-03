@@ -88,6 +88,27 @@ class NextCallerClient(object):
         return default_handle_response(response)
 
     @check_kwargs
+    def get_by_email(self, email, **kwargs):
+        """
+        Get profile by an email
+
+        :param email:str        The complete email address you want to look up a profile for
+        :param kwargs:dict      Additional params for request
+
+        :return:dict            Serialised response as dictionary
+        """
+        validate_email(email)
+        url_params = dict({
+            'email': email,
+            'format': JSON_RESPONSE_FORMAT
+        }, **kwargs)
+        url = prepare_url(self.base_url, 'records/', url_params=url_params)
+        response = make_http_request(
+            self.auth, url, method='GET', debug=self.debug
+        )
+        return default_handle_response(response)
+
+    @check_kwargs
     def update_by_profile_id(self, profile_id, data, **kwargs):
         """
         Update profile by a profile id
@@ -196,6 +217,21 @@ class NextCallerPlatformClient(NextCallerClient):
         validate_account_id(account_id)
         with PlatformAuthContextManager(self.auth, account_id):
             return super(NextCallerPlatformClient, self).get_by_address_name(data, **kwargs)
+
+    @check_kwargs
+    def get_by_email(self, email, account_id, **kwargs):
+        """
+        Get profile by a email
+
+        :param email:str        The complete email address you want to look up a profile for
+        :param account_id:str   Name of platform account
+        :param kwargs:dict      Additional params for request
+
+        :return:dict            Serialised response as dictionary
+        """
+        validate_account_id(account_id)
+        with PlatformAuthContextManager(self.auth, account_id):
+            return super(NextCallerPlatformClient, self).get_by_email(email, **kwargs)
 
     @check_kwargs
     def update_by_profile_id(self, profile_id, data,

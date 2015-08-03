@@ -28,6 +28,7 @@ __all__ = (
     'validate_phone',
     'validate_profile_id',
     'validate_address',
+    'validate_email',
     'validate_account_id',
     'prepare_url',
     'prepare_base_url',
@@ -126,6 +127,22 @@ def validate_address(address_data):
         raise ValueError('either pair of city and state fields or '
                          'zip_code field should be supplied')
     return dict((key, str(value)) for key, value in address_data.items())
+
+
+def validate_email(value):
+    """Validate profile id format"""
+    if not value:
+        raise ValueError(
+            'Invalid email: {0}. Email cannot be blank.'.format(value)
+        )
+    if not isinstance(value, basestring):
+        raise ValueError(
+            'Invalid email: {0}. Email cannot be type of {1}.'.format(value, type(value))
+        )
+    if not re.match('^.+@.+\..{2,}$', value):
+        raise ValueError(
+            'Invalid email: {0}. Email string has wrong format.'.format(value)
+        )
 
 
 def validate_account_id(value, max_length=MAX_ACCOUNT_ID_LENGTH):
