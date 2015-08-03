@@ -72,8 +72,7 @@ class NextCallerClient(object):
         """
         Get profile by an address
 
-        :param data:dict        Profile identifier from get_by_phone
-                                response with length in 30 symbols
+        :param data:dict        Dictionary with address and name data for search
         :param kwargs:dict      Additional params for request
 
         :return:dict            Serialised response as dictionary
@@ -192,8 +191,7 @@ class NextCallerPlatformClient(NextCallerClient):
         """
         Get profile by an address
 
-        :param data:dict                Profile identifier from get_by_phone
-                                        response with length in 30 symbols
+        :param data:dict                Dictionary with address and name data for search
         :param account_id:str           Name of platform account
         :param kwargs:dict              Additional params for request
 

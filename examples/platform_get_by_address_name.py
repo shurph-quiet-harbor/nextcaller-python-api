@@ -15,7 +15,7 @@ password = 'XXXXX'
 sandbox = True
 debug = True
 account_id = 'test'
-address_data = {
+data = {
     'first_name': 'Jerry',
     'last_name': 'Seinfeld',
     'address': '129 West 81st Street',
@@ -29,7 +29,7 @@ client = NextCallerPlatformClient(username, password,
 
 # get by address
 try:
-    response_content = client.get_by_address_name(address_data, account_id)
+    response_content = client.get_by_address_name(data, account_id)
     logger.info(response_content)
 except ValueError as err:
     logger.error('Validation Error: {}'.format(err))
