@@ -28,7 +28,7 @@ __all__ = (
     'validate_phone',
     'validate_profile_id',
     'validate_address',
-    'validate_platform_username',
+    'validate_account_id',
     'prepare_url',
     'prepare_base_url',
     'prepare_json_data',
@@ -128,7 +128,7 @@ def validate_address(address_data):
     return dict((key, str(value)) for key, value in address_data.items())
 
 
-def validate_platform_username(value, max_length=MAX_PLATFORM_USERNAME_LENGTH):
+def validate_account_id(value, max_length=MAX_ACCOUNT_ID_LENGTH):
     """Validate platform username"""
     if not value:
         raise ValueError(
@@ -184,4 +184,4 @@ def check_kwargs(*all_args):
     return dec
 
 
-check_kwargs = check_kwargs('data', 'platform_username')
+check_kwargs = check_kwargs('data', 'account_id')

@@ -9,7 +9,7 @@ from setuptools import setup, find_packages
 
 __author__ = 'Igor Nemilentsev'
 __author_email__ = 'trezorg@gmail.com'
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 tests_require = ['nose']
 
 

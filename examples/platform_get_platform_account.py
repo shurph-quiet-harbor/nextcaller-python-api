@@ -13,14 +13,14 @@ handler.setFormatter(formatter)
 
 username = 'XXXXX'
 password = 'XXXXX'
-platform_username = 'test'
+account_id = 'test'
 sandbox = True
 debug = True
 
 client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
 
 try:
-    response_content = client.get_platform_user(platform_username)
+    response_content = client.get_platform_account(account_id)
     logger.info(response_content)
 except ValueError as err:
     logger.error('Validation Error: {}'.format(err))

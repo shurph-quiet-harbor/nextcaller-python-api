@@ -31,9 +31,9 @@ class FraudPlatformTestCase(BasePlatformTestCase):
 
     def test_client_fraud(self):
         phone = '2125558383'
-        platform_user = 'test_username'
+        account_id = 'test_username'
         self.patch_http_request(FRAUD_JSON_RESULT_EXAMPLE)
-        res = self.client.get_fraud_level(phone, platform_user)
+        res = self.client.get_fraud_level(phone, account_id)
         self.assertEqual(res['spoofed'], 'unknown')
 
 

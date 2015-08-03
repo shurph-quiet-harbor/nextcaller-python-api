@@ -14,7 +14,7 @@ username = 'XXXXX'
 password = 'XXXXX'
 sandbox = True
 debug = True
-address_data = {
+data = {
     'first_name': 'Jerry',
     'last_name': 'Seinfeld',
     'address': '129 West 81st Street',
@@ -27,7 +27,7 @@ client = NextCallerClient(username, password, sandbox=sandbox, debug=debug)
 
 # get by address
 try:
-    response_content = client.get_by_address_name(address_data)
+    response_content = client.get_by_address_name(data)
     logger.info(response_content)
 except ValueError as err:
     logger.error('Validation Error: {}'.format(err))

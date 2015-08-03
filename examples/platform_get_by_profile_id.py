@@ -15,13 +15,13 @@ password = 'XXXXX'
 sandbox = True
 debug = True
 profile_id = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-platform_username = 'test'
+account_id = 'test'
 
 client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
 
 # get by profile id
 try:
-    response_content = client.get_by_profile_id(profile_id, platform_username)
+    response_content = client.get_by_profile_id(profile_id, account_id)
     logger.info(response_content)
 except ValueError as err:
     logger.error('Validation Error: {}'.format(err))
