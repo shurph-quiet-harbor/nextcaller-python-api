@@ -164,9 +164,7 @@ class NextCallerPlatformClient(NextCallerClient):
         """
         validate_account_id(account_id)
         with PlatformAuthContextManager(self.auth, account_id):
-            return super(NextCallerPlatformClient, self).get_by_phone(
-                phone, account_id=account_id, **kwargs
-            )
+            return super(NextCallerPlatformClient, self).get_by_phone(phone, **kwargs)
 
     @check_kwargs
     def get_by_profile_id(self, profile_id, account_id, **kwargs):
@@ -182,9 +180,7 @@ class NextCallerPlatformClient(NextCallerClient):
         """
         validate_account_id(account_id)
         with PlatformAuthContextManager(self.auth, account_id):
-            return super(NextCallerPlatformClient, self).get_by_profile_id(
-                profile_id, account_id=account_id, **kwargs
-            )
+            return super(NextCallerPlatformClient, self).get_by_profile_id(profile_id, **kwargs)
 
     @check_kwargs
     def get_by_address_name(self, data, account_id, **kwargs):
@@ -199,9 +195,7 @@ class NextCallerPlatformClient(NextCallerClient):
         """
         validate_account_id(account_id)
         with PlatformAuthContextManager(self.auth, account_id):
-            return super(NextCallerPlatformClient, self).get_by_address_name(
-                data, account_id=account_id, **kwargs
-            )
+            return super(NextCallerPlatformClient, self).get_by_address_name(data, **kwargs)
 
     @check_kwargs
     def update_by_profile_id(self, profile_id, data,
@@ -219,9 +213,7 @@ class NextCallerPlatformClient(NextCallerClient):
         """
         validate_account_id(account_id)
         with PlatformAuthContextManager(self.auth, account_id):
-            return super(NextCallerPlatformClient, self).update_by_profile_id(
-                profile_id, data, account_id=account_id, **kwargs
-            )
+            return super(NextCallerPlatformClient, self).update_by_profile_id(profile_id, data, **kwargs)
 
     def get_platform_statistics(self, page=1, **kwargs):
         """
@@ -294,6 +286,4 @@ class NextCallerPlatformClient(NextCallerClient):
         :return:dict                    Serialised response as dictionary
         """
         validate_account_id(account_id)
-        return super(NextCallerPlatformClient, self).get_fraud_level(
-            phone, account_id=account_id, **kwargs
-        )
+        return super(NextCallerPlatformClient, self).get_fraud_level(phone, **kwargs)
