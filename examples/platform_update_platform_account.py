@@ -21,7 +21,7 @@ client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=deb
 
 try:
     data = {'email': 'test@test.com'}
-    response_content = client.update_platform_account(account_id, data)
+    response_content = client.update_platform_account(data, account_id)
     logger.info(response_content)
 except ValueError as err:
     logger.error('Validation Error: {}'.format(err))

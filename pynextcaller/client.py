@@ -277,12 +277,12 @@ class NextCallerPlatformClient(NextCallerClient):
             self.auth, url, method='GET', debug=self.debug)
         return default_handle_response(response)
 
-    def update_platform_account(self, account_id, data):
+    def update_platform_account(self, data, account_id):
         """
         Update platform account data
 
-        :param account_id:str           Name of platform account
         :param data:dict                Data to update as dictionary
+        :param account_id:str           Name of platform account
 
         :return:str                     HTTP Body of response as text
         """
@@ -308,4 +308,5 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:dict                    Serialised response as dictionary
         """
-        return super(NextCallerPlatformClient, self).get_fraud_level(phone, **kwargs)
+        with PlatformAuthContextManager(self.auth, account_id):
+            return super(NextCallerPlatformClient, self).get_fraud_level(phone, **kwargs)
