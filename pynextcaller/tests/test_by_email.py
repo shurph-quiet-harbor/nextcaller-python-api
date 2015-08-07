@@ -75,16 +75,6 @@ EMAIL_JSON_RESULT_EXAMPLE = '''
 
 class EmailTestCase(BaseTestCase):
 
-    def test_by_empty_email(self):
-        email = ''
-        self.patch_http_request(EMAIL_JSON_RESULT_EXAMPLE)
-        self.assertRaises(ValueError, self.client.get_by_email, email)
-
-    def test_by_invalid_email(self):
-        email = 'test@invalid'
-        self.patch_http_request(EMAIL_JSON_RESULT_EXAMPLE)
-        self.assertRaises(ValueError, self.client.get_by_email, email)
-
     def test_by_email(self):
         email = 'demo@nextcaller.com'
         self.patch_http_request(EMAIL_JSON_RESULT_EXAMPLE)
@@ -96,16 +86,6 @@ class EmailTestCase(BaseTestCase):
 
 
 class PlatformEmailTestCase(BasePlatformTestCase):
-
-    def test_by_empty_email(self):
-        email = ''
-        self.patch_http_request(EMAIL_JSON_RESULT_EXAMPLE)
-        self.assertRaises(ValueError, self.client.get_by_email, email, self.account_id)
-
-    def test_by_invalid_email(self):
-        email = 'test@invalid'
-        self.patch_http_request(EMAIL_JSON_RESULT_EXAMPLE)
-        self.assertRaises(ValueError, self.client.get_by_email, email, self.account_id)
 
     def test_by_email(self):
         email = 'demo@nextcaller.com'

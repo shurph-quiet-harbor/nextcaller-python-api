@@ -75,16 +75,6 @@ PHONE_JSON_RESULT_EXAMPLE = '''
 
 class PhoneTestCase(BaseTestCase):
 
-    def test_by_short_phone(self):
-        phone = '212555838'
-        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
-        self.assertRaises(ValueError, self.client.get_by_phone, phone)
-
-    def test_by_wrong_phone(self):
-        phone = 'XXXXXXXXXX'
-        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
-        self.assertRaises(ValueError, self.client.get_by_phone, phone)
-
     def test_by_wrong_argument(self):
         phone = '1231231231'
         self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
@@ -101,18 +91,6 @@ class PhoneTestCase(BaseTestCase):
 
 
 class PlatformPhoneTestCase(BasePlatformTestCase):
-
-    def test_by_short_phone(self):
-        phone = '212555838'
-        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
-        self.assertRaises(ValueError, self.client.get_by_phone,
-                          phone, self.account_id)
-
-    def test_by_wrong_phone(self):
-        phone = 'XXXXXXXXXX'
-        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
-        self.assertRaises(ValueError, self.client.get_by_phone,
-                          phone, self.account_id)
 
     def test_by_wrong_argument(self):
         phone = '1231231231'

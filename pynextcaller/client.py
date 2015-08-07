@@ -36,7 +36,6 @@ class NextCallerClient(object):
 
         :return:list        Serialised response as list
         """
-        validate_phone(phone)
         url_params = dict({
             'phone': phone,
             'format': JSON_RESPONSE_FORMAT,
@@ -57,7 +56,6 @@ class NextCallerClient(object):
 
         :return:dict            Serialised response as dictionary
         """
-        validate_profile_id(profile_id)
         url_params = dict({
             'format': JSON_RESPONSE_FORMAT
         }, **kwargs)
@@ -77,11 +75,10 @@ class NextCallerClient(object):
 
         :return:dict            Serialised response as dictionary
         """
-        clean_data = validate_address(data)
-        clean_data.update(kwargs)
+        data.update(kwargs)
         url_params = dict({
             'format': JSON_RESPONSE_FORMAT
-        }, **clean_data)
+        }, **data)
         url = prepare_url(self.base_url, 'records/', url_params=url_params)
         response = make_http_request(
             self.auth, url, method='GET', debug=self.debug)
@@ -97,7 +94,6 @@ class NextCallerClient(object):
 
         :return:dict            Serialised response as dictionary
         """
-        validate_email(email)
         url_params = dict({
             'email': email,
             'format': JSON_RESPONSE_FORMAT
@@ -120,7 +116,6 @@ class NextCallerClient(object):
 
         :return:str             HTTP Body of response as text
         """
-        validate_profile_id(profile_id)
         url_params = dict({
             'format': JSON_RESPONSE_FORMAT
         }, **kwargs)
@@ -142,7 +137,6 @@ class NextCallerClient(object):
 
         :return:dict        Serialised response as dictionary
         """
-        validate_phone(phone)
         url_params = dict({
             'phone': phone,
             'format': JSON_RESPONSE_FORMAT,
@@ -183,7 +177,6 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:list                    Serialised response as list
         """
-        validate_account_id(account_id)
         with PlatformAuthContextManager(self.auth, account_id):
             return super(NextCallerPlatformClient, self).get_by_phone(phone, **kwargs)
 
@@ -199,7 +192,6 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:dict                    Serialised response as dictionary
         """
-        validate_account_id(account_id)
         with PlatformAuthContextManager(self.auth, account_id):
             return super(NextCallerPlatformClient, self).get_by_profile_id(profile_id, **kwargs)
 
@@ -214,7 +206,6 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:dict                    Serialised response as dictionary
         """
-        validate_account_id(account_id)
         with PlatformAuthContextManager(self.auth, account_id):
             return super(NextCallerPlatformClient, self).get_by_address_name(data, **kwargs)
 
@@ -229,7 +220,6 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:dict            Serialised response as dictionary
         """
-        validate_account_id(account_id)
         with PlatformAuthContextManager(self.auth, account_id):
             return super(NextCallerPlatformClient, self).get_by_email(email, **kwargs)
 
@@ -247,7 +237,6 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:str                     HTTP Body of response as text
         """
-        validate_account_id(account_id)
         with PlatformAuthContextManager(self.auth, account_id):
             return super(NextCallerPlatformClient, self).update_by_profile_id(profile_id, data, **kwargs)
 
@@ -279,7 +268,6 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:dict                   platform account detail data
         """
-        validate_account_id(account_id)
         url_params = dict({
             'format': JSON_RESPONSE_FORMAT
         }, **kwargs)
@@ -298,7 +286,6 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:str                     HTTP Body of response as text
         """
-        validate_account_id(account_id)
         url_params = {
             'format': JSON_RESPONSE_FORMAT
         }
@@ -321,5 +308,4 @@ class NextCallerPlatformClient(NextCallerClient):
 
         :return:dict                    Serialised response as dictionary
         """
-        validate_account_id(account_id)
         return super(NextCallerPlatformClient, self).get_fraud_level(phone, **kwargs)
