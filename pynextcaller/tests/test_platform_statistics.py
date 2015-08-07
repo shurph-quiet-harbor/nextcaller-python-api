@@ -128,8 +128,7 @@ class PlatformTestCase(BasePlatformTestCase):
     def test_update_platform_account(self):
         account_id = 'test_username'
         self.patch_http_request(self.fake_response)
-        res = self.client.update_platform_account(
-            account_id, data=PLATFORM_ACCOUNT_JSON_REQUEST_EXAMPLE)
+        res = self.client.update_platform_account(PLATFORM_ACCOUNT_JSON_REQUEST_EXAMPLE, account_id)
         self.assertEqual(res.status_code, 204)
 
     def test_update_wrong_platform_account(self):
@@ -138,9 +137,7 @@ class PlatformTestCase(BasePlatformTestCase):
         fake_response.status_code = 400
         fake_response.content = PLATFORM_ACCOUNT_WRONG_RESULT
         self.patch_http_request(fake_response)
-        res = self.client.update_platform_account(
-            account_id,
-            data=PLATFORM_ACCOUNT_WRONG_JSON_REQUEST_EXAMPLE)
+        res = self.client.update_platform_account(PLATFORM_ACCOUNT_WRONG_JSON_REQUEST_EXAMPLE, account_id)
         self.assertEqual(res.status_code, 400)
         self.assertEqual(
             json.loads(res.content)['error']['description']['email'][0],
