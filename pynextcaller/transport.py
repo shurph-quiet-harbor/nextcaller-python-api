@@ -2,7 +2,9 @@ from __future__ import unicode_literals
 import json
 import logging
 import requests
+
 from .constants import *
+from .exceptions import *
 
 
 __all__ = (
@@ -57,18 +59,31 @@ def _prepare_request_data(
     return kwargs
 
 
+def _raise_http_error(response):
+    """
+    Raises `HttpException` subclass, if an error occurred while handling request.
+    """
+    status_code = response.status_code
+    if status_code == 429:
+        raise TooManyRequestsException(response)
+    elif 400 <= status_code < 500:
+        raise ClientHttpException(response)
+    elif 500 <= status_code < 600:
+        raise ServerHttpException(response)
+
+
 def api_request(url, data=None, headers=None, method='GET',
                 timeout=None, ssl_verify=True, debug=False):
     kwargs = _prepare_request_data(
         data=data, headers=headers, method=method,
-        timeout=timeout, ssl_verify=ssl_verify)
+        timeout=timeout, ssl_verify=ssl_verify
+    )
     response = requests.request(method, url, **kwargs)
     _debug_log('Request url: {0}'.format(response.url), debug)
     if method == 'POST':
         _debug_log('Request body: {0}'.format(response.request.body), debug)
-    status_code = response.status_code
-    if status_code >= 400:
-        response.raise_for_status()
+    if response.status_code >= 400:
+        _raise_http_error(response)
     return response.text
 
 
