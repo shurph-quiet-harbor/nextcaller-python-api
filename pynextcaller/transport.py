@@ -49,10 +49,10 @@ def _prepare_request_data(
     if timeout is None:
         timeout = DEFAULT_REQUEST_TIMEOUT
     kwargs['timeout'] = timeout
-    if method == 'POST':
-        kwargs['data'] = data
     if method == 'GET':
         kwargs['params'] = data
+    else:
+        kwargs['data'] = data
     kwargs['headers'] = headers
     kwargs['allow_redirects'] = True
     kwargs['verify'] = ssl_verify
@@ -80,7 +80,7 @@ def api_request(url, data=None, headers=None, method='GET',
     )
     response = requests.request(method, url, **kwargs)
     _debug_log('Request url: {0}'.format(response.url), debug)
-    if method == 'POST':
+    if method != 'GET':
         _debug_log('Request body: {0}'.format(response.request.body), debug)
     if response.status_code >= 400:
         _raise_http_error(response)

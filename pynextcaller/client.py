@@ -277,6 +277,26 @@ class NextCallerPlatformClient(NextCallerClient):
             self.auth, url, method='GET', debug=self.debug)
         return default_handle_response(response)
 
+    def create_platform_account(self, data):
+        """
+        Create platform account
+
+        :param data:dict                Initial data to create new platform account as dictionary
+
+        :return:str                     HTTP Body of response as text
+        """
+        url_params = {
+            'format': JSON_RESPONSE_FORMAT
+        }
+        url = prepare_url(
+            self.base_url, 'accounts/',
+            url_params=url_params)
+        data = prepare_json_data(data)
+        return make_http_request(
+            self.auth, url, data=data, method='POST',
+            content_type=JSON_CONTENT_TYPE, debug=self.debug
+        )
+
     def update_platform_account(self, data, account_id):
         """
         Update platform account data
@@ -294,7 +314,7 @@ class NextCallerPlatformClient(NextCallerClient):
             url_params=url_params)
         data = prepare_json_data(data)
         return make_http_request(
-            self.auth, url, data=data, method='POST',
+            self.auth, url, data=data, method='PUT',
             content_type=JSON_CONTENT_TYPE, debug=self.debug
         )
 
