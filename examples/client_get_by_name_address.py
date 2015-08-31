@@ -28,7 +28,7 @@ client = NextCallerClient(username, password, sandbox=sandbox, debug=debug)
 
 # get by address
 try:
-    response_content = client.get_by_address_name(data)
+    response_content = client.get_by_name_address(data)
     logger.info(response_content)
 except HttpException as err:
     logger.error(

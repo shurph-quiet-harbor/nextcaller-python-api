@@ -30,7 +30,7 @@ client = NextCallerPlatformClient(username, password,
 
 # get by address
 try:
-    response_content = client.get_by_address_name(data, account_id)
+    response_content = client.get_by_name_address(data, account_id)
     logger.info(response_content)
 except HttpException as err:
     logger.error(

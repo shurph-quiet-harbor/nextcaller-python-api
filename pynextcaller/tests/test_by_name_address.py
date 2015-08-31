@@ -86,7 +86,7 @@ class AddressTestCase(BaseTestCase):
 
     def test_by_address(self):
         self.patch_http_request(ADDRESS_NAME_JSON_RESULT_EXAMPLE)
-        res = self.client.get_by_address_name(ADDRESS_NAME_DATA)
+        res = self.client.get_by_name_address(ADDRESS_NAME_DATA)
         self.assertTrue(res['records'])
         self.assertEqual(res['records'][0]['email'], 'demo@nextcaller.com')
         self.assertEqual(res['records'][0]['first_name'], 'Jerry')
@@ -97,7 +97,7 @@ class PlatformAddressTestCase(BasePlatformTestCase):
 
     def test_by_address(self):
         self.patch_http_request(ADDRESS_NAME_JSON_RESULT_EXAMPLE)
-        res = self.client.get_by_address_name(ADDRESS_NAME_DATA, self.account_id)
+        res = self.client.get_by_name_address(ADDRESS_NAME_DATA, self.account_id)
         self.assertTrue(res['records'])
         self.assertEqual(res['records'][0]['email'], 'demo@nextcaller.com')
         self.assertEqual(res['records'][0]['first_name'], 'Jerry')

@@ -66,7 +66,7 @@ class NextCallerClient(object):
         return default_handle_response(response)
 
     @check_kwargs
-    def get_by_address_name(self, data, **kwargs):
+    def get_by_name_address(self, data, **kwargs):
         """
         Get profile by an address
 
@@ -196,7 +196,7 @@ class NextCallerPlatformClient(NextCallerClient):
             return super(NextCallerPlatformClient, self).get_by_profile_id(profile_id, **kwargs)
 
     @check_kwargs
-    def get_by_address_name(self, data, account_id, **kwargs):
+    def get_by_name_address(self, data, account_id, **kwargs):
         """
         Get profile by an address
 
@@ -207,7 +207,7 @@ class NextCallerPlatformClient(NextCallerClient):
         :return:dict                    Serialised response as dictionary
         """
         with PlatformAuthContextManager(self.auth, account_id):
-            return super(NextCallerPlatformClient, self).get_by_address_name(data, **kwargs)
+            return super(NextCallerPlatformClient, self).get_by_name_address(data, **kwargs)
 
     @check_kwargs
     def get_by_email(self, email, account_id, **kwargs):
