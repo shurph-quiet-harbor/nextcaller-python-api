@@ -1,6 +1,6 @@
 import logging
-from requests import HTTPError, RequestException
 from pynextcaller.client import NextCallerPlatformClient
+from pynextcaller.exceptions import HttpException
 
 
 logger = logging.getLogger('nextcaller')
@@ -27,18 +27,7 @@ try:
     }
     response_content = client.create_platform_account(data)
     logger.info(response_content)
-except ValueError as err:
-    logger.error('Validation Error: {}'.format(err))
-except HTTPError as err:
-    response = err.response
-    response_code = response.status_code
-    # try to parse error json message
-    try:
-        response_message = response.json()
-    except (ValueError, TypeError):
-        response_message = response.text
+except HttpException as err:
     logger.error(
-        'HTTPError. Status code {}. Response message: {}'.
-        format(response_code, response_message))
-except RequestException as err:
-    logger.error('RequestException. {}'.format(err))
+        'Response message: {}'.format(err.message),
+    )
