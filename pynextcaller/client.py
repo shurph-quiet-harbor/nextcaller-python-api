@@ -8,22 +8,20 @@ from .transport import make_http_request
 class NextCallerClient(object):
     """The NextCaller API client"""
 
-    def __init__(self, username, password, version=DEFAULT_API_VERSION,
-                 sandbox=False, debug=False):
+    def __init__(self, username, password, sandbox=False, debug=False):
         """
         Initialize NextCaller client with API username
         and password for Basic Authorization
 
         :param username:str     API username
         :param password:str     API password
-        :param version:str      API version
         :param sandbox:bool     If True - sandbox mode is turned on
         :param debug:bool       If True - all actions will be reflected
                                 in console output
         """
         self.auth = BasicAuth(username, password)
         self.sandbox = bool(sandbox)
-        self.base_url = prepare_base_url(sandbox, version)
+        self.base_url = prepare_base_url(sandbox)
         self.debug = debug
 
     @check_kwargs
@@ -150,20 +148,18 @@ class NextCallerClient(object):
 class NextCallerPlatformClient(NextCallerClient):
     """The NextCaller platform API client"""
 
-    def __init__(self, username, password, version=DEFAULT_API_VERSION,
-                 sandbox=False, debug=False):
+    def __init__(self, username, password, sandbox=False, debug=False):
         """
         Initialize NextCaller client with API username
         and password for Basic Authorization
 
         :param username:str     API username
         :param password:str     API password
-        :param version:str      API version
         :param sandbox:bool     If True - sandbox mode is turned on
         :param debug:bool       If True - all actions will be reflected
                                 in console output
         """
-        super(NextCallerPlatformClient, self).__init__(username, password, version, sandbox, debug)
+        super(NextCallerPlatformClient, self).__init__(username, password, sandbox, debug)
         self.auth = PlatformBasicAuth(username, password)
 
     @check_kwargs
