@@ -13,11 +13,10 @@ handler.setFormatter(formatter)
 username = 'XXXXX'
 password = 'XXXXX'
 sandbox = True
-debug = True
 profile_id = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 account_id = 'test'
 
-client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
+client = NextCallerPlatformClient(username, password, sandbox=sandbox)
 
 # update by profile id
 try:

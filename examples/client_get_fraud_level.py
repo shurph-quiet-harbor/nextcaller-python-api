@@ -14,10 +14,9 @@ handler.setFormatter(formatter)
 username = 'XXXXX'
 password = 'XXXXX'
 sandbox = True
-debug = True
 phone_number = '1211211212'
 
-client = NextCallerClient(username, password, sandbox=sandbox, debug=debug)
+client = NextCallerClient(username, password, sandbox=sandbox)
 
 # get fraud level
 try:

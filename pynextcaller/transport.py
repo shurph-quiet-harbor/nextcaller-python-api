@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 import json
-import logging
 import requests
 
 from .constants import *
@@ -13,31 +12,11 @@ __all__ = (
 )
 
 
-def prepare_logger():
-    log = logging.getLogger('nextcaller.transport')
-    handler = logging.StreamHandler()
-    log.addHandler(handler)
-    log.setLevel(logging.DEBUG)
-    log.propagate = False
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    return log
-
-
-logger = prepare_logger()
-
-
 def _to_json(content):
     try:
         return json.loads(content)
     except (TypeError, ValueError):
         return content
-
-
-def _debug_log(value, debug=True):
-    if debug:
-        logger.debug(value)
 
 
 def _prepare_request_data(
@@ -72,16 +51,12 @@ def _raise_http_error(response):
         raise ServerHttpException(response)
 
 
-def api_request(url, data=None, headers=None, method='GET',
-                timeout=None, ssl_verify=True, debug=False):
+def api_request(url, data=None, headers=None, method='GET', timeout=None, ssl_verify=True):
     kwargs = _prepare_request_data(
         data=data, headers=headers, method=method,
         timeout=timeout, ssl_verify=ssl_verify
     )
     response = requests.request(method, url, **kwargs)
-    _debug_log('Request url: {0}'.format(response.url), debug)
-    if method != 'GET':
-        _debug_log('Request body: {0}'.format(response.request.body), debug)
     if response.status_code >= 400:
         _raise_http_error(response)
     return response.text
@@ -97,8 +72,7 @@ def _build_headers(auth, user_agent=None, content_type=None):
     return headers
 
 
-def make_http_request(auth, url, data=None, method='GET', user_agent=None,
-                      content_type=None, debug=False):
+def make_http_request(auth, url, data=None, method='GET', user_agent=None, content_type=None):
     if data is None:
         data = {}
     if user_agent is None:
@@ -108,8 +82,7 @@ def make_http_request(auth, url, data=None, method='GET', user_agent=None,
     requests_kwargs = {
         'method': method,
         'headers': headers,
-        'data': data,
-        'debug': debug
+        'data': data
     }
     response = api_request(url, **requests_kwargs)
     return response

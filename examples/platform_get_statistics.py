@@ -15,9 +15,8 @@ username = 'XXXXX'
 password = 'XXXXX'
 account_id = 'test'
 sandbox = True
-debug = True
 
-client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
+client = NextCallerPlatformClient(username, password, sandbox=sandbox)
 
 try:
     response_content = client.get_platform_statistics(page=1)

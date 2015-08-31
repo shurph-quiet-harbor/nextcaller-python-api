@@ -14,9 +14,8 @@ handler.setFormatter(formatter)
 username = 'XXXXX'
 password = 'XXXXX'
 sandbox = True
-debug = True
 
-client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
+client = NextCallerPlatformClient(username, password, sandbox=sandbox)
 
 try:
     data = {

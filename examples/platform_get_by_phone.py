@@ -14,11 +14,10 @@ handler.setFormatter(formatter)
 username = 'XXXXX'
 password = 'XXXXX'
 sandbox = True
-debug = True
 phone_number = '1211211212'
 account_id = 'test'
 
-client = NextCallerPlatformClient(username, password, sandbox=sandbox, debug=debug)
+client = NextCallerPlatformClient(username, password, sandbox=sandbox)
 
 # get by phone
 try:

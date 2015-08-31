@@ -14,7 +14,6 @@ handler.setFormatter(formatter)
 username = 'XXXXX'
 password = 'XXXXX'
 sandbox = True
-debug = True
 data = {
     'first_name': 'Jerry',
     'last_name': 'Seinfeld',
@@ -24,7 +23,7 @@ data = {
     'zip_code': '10024',
 }
 
-client = NextCallerClient(username, password, sandbox=sandbox, debug=debug)
+client = NextCallerClient(username, password, sandbox=sandbox)
 
 # get by address
 try:

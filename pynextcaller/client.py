@@ -8,7 +8,7 @@ from .transport import make_http_request
 class NextCallerClient(object):
     """The NextCaller API client"""
 
-    def __init__(self, username, password, sandbox=False, debug=False):
+    def __init__(self, username, password, sandbox=False):
         """
         Initialize NextCaller client with API username
         and password for Basic Authorization
@@ -16,13 +16,10 @@ class NextCallerClient(object):
         :param username:str     API username
         :param password:str     API password
         :param sandbox:bool     If True - sandbox mode is turned on
-        :param debug:bool       If True - all actions will be reflected
-                                in console output
         """
         self.auth = BasicAuth(username, password)
         self.sandbox = bool(sandbox)
         self.base_url = prepare_base_url(sandbox)
-        self.debug = debug
 
     @check_kwargs
     def get_by_phone(self, phone, **kwargs):
@@ -39,8 +36,7 @@ class NextCallerClient(object):
             'format': JSON_RESPONSE_FORMAT,
         }, **kwargs)
         url = prepare_url(self.base_url, 'records/', url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug)
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
     @check_kwargs
@@ -59,8 +55,7 @@ class NextCallerClient(object):
         }, **kwargs)
         url = prepare_url(self.base_url, 'users/{0}/'.format(profile_id),
                           url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug)
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
     @check_kwargs
@@ -78,8 +73,7 @@ class NextCallerClient(object):
             'format': JSON_RESPONSE_FORMAT
         }, **data)
         url = prepare_url(self.base_url, 'records/', url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug)
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
     @check_kwargs
@@ -97,9 +91,7 @@ class NextCallerClient(object):
             'format': JSON_RESPONSE_FORMAT
         }, **kwargs)
         url = prepare_url(self.base_url, 'records/', url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug
-        )
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
     @check_kwargs
@@ -121,8 +113,7 @@ class NextCallerClient(object):
                           url_params=url_params)
         data = prepare_json_data(data)
         return make_http_request(
-            self.auth, url, data=data, method='POST',
-            content_type=JSON_CONTENT_TYPE, debug=self.debug
+            self.auth, url, data=data, method='POST', content_type=JSON_CONTENT_TYPE
         )
 
     @check_kwargs
@@ -140,15 +131,14 @@ class NextCallerClient(object):
             'format': JSON_RESPONSE_FORMAT,
         }, **kwargs)
         url = prepare_url(self.base_url, 'fraud/', url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug)
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
 
 class NextCallerPlatformClient(NextCallerClient):
     """The NextCaller platform API client"""
 
-    def __init__(self, username, password, sandbox=False, debug=False):
+    def __init__(self, username, password, sandbox=False):
         """
         Initialize NextCaller client with API username
         and password for Basic Authorization
@@ -156,10 +146,8 @@ class NextCallerPlatformClient(NextCallerClient):
         :param username:str     API username
         :param password:str     API password
         :param sandbox:bool     If True - sandbox mode is turned on
-        :param debug:bool       If True - all actions will be reflected
-                                in console output
         """
-        super(NextCallerPlatformClient, self).__init__(username, password, sandbox, debug)
+        super(NextCallerPlatformClient, self).__init__(username, password, sandbox)
         self.auth = PlatformBasicAuth(username, password)
 
     @check_kwargs
@@ -252,8 +240,7 @@ class NextCallerPlatformClient(NextCallerClient):
         }, **kwargs)
         url = prepare_url(
             self.base_url, 'accounts/', url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug)
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
     def get_platform_account(self, account_id, **kwargs):
@@ -269,8 +256,7 @@ class NextCallerPlatformClient(NextCallerClient):
         }, **kwargs)
         url_path = 'accounts/{0}/'.format(account_id)
         url = prepare_url(self.base_url, url_path, url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug)
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
     def create_platform_account(self, data):
@@ -289,8 +275,7 @@ class NextCallerPlatformClient(NextCallerClient):
             url_params=url_params)
         data = prepare_json_data(data)
         return make_http_request(
-            self.auth, url, data=data, method='POST',
-            content_type=JSON_CONTENT_TYPE, debug=self.debug
+            self.auth, url, data=data, method='POST', content_type=JSON_CONTENT_TYPE
         )
 
     def update_platform_account(self, data, account_id):
@@ -310,8 +295,7 @@ class NextCallerPlatformClient(NextCallerClient):
             url_params=url_params)
         data = prepare_json_data(data)
         return make_http_request(
-            self.auth, url, data=data, method='PUT',
-            content_type=JSON_CONTENT_TYPE, debug=self.debug
+            self.auth, url, data=data, method='PUT', content_type=JSON_CONTENT_TYPE
         )
 
     def get_fraud_level(self, phone, account_id, **kwargs):

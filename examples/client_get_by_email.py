@@ -14,10 +14,9 @@ handler.setFormatter(formatter)
 username = 'XXXXX'
 password = 'XXXXX'
 sandbox = True
-debug = True
 email = 'demo@nextcaller.com'
 
-client = NextCallerClient(username, password, sandbox=sandbox, debug=debug)
+client = NextCallerClient(username, password, sandbox=sandbox)
 
 # get by email
 try:

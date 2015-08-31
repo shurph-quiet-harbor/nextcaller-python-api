@@ -22,7 +22,7 @@ data = {
 client = NextCallerPlatformClient(username, password, sandbox=sandbox)
 
 try:
-    response_content = client.update_platform_account(account_id, data, debug=True)
+    response_content = client.update_platform_account(account_id, data)
     logger.info(response_content)
 except HttpException as err:
     logger.error(
