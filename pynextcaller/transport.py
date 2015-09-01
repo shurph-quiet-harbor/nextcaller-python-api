@@ -43,12 +43,17 @@ def _raise_http_error(response):
     Raises `HttpException` subclass, if an error occurred while handling request.
     """
     status_code = response.status_code
+    try:
+        content = response.json()
+    except ValueError:
+        content = {}
+
     if status_code == 429:
-        raise TooManyRequestsException(response)
+        handle_too_many_requests_error(response, content)
     elif 400 <= status_code < 500:
-        raise ClientHttpException(response)
+        raise ClientHttpException(response, content)
     elif 500 <= status_code < 600:
-        raise ServerHttpException(response)
+        raise ServerHttpException(response, content)
 
 
 def api_request(url, data=None, headers=None, method='GET', timeout=None, ssl_verify=True):
