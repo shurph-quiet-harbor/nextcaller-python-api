@@ -1,7 +1,7 @@
 # default values
 DEFAULT_REQUEST_TIMEOUT = 60
 JSON_RESPONSE_FORMAT = 'json'
-DEFAULT_USER_AGENT = 'nextcaller/python/0.1.3'
+DEFAULT_USER_AGENT = 'nextcaller/python/0.2'
 JSON_CONTENT_TYPE = 'application/json; charset=utf-8'
 DEFAULT_RATE_LIMIT_EXCEEDED_CODE = '1061'
 DEFAULT_RATE_LIMIT_LIMIT_HEADER = 'X-Rate-Limit-Limit'
