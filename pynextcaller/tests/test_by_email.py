@@ -10,7 +10,7 @@ except (ValueError, ImportError):
     from pynextcaller.tests.base import BaseTestCase, BasePlatformTestCase
 
 
-PHONE_JSON_RESULT_EXAMPLE = '''
+EMAIL_JSON_RESULT_EXAMPLE = '''
 {
     "records": [
         {
@@ -73,39 +73,28 @@ PHONE_JSON_RESULT_EXAMPLE = '''
 '''
 
 
-class PhoneTestCase(BaseTestCase):
+class EmailTestCase(BaseTestCase):
 
-    def test_by_wrong_argument(self):
-        phone = '1231231231'
-        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
-        self.assertRaises(ValueError, self.client.get_by_phone, phone, x='xx')
-
-    def test_by_phone(self):
-        phone = '2125558383'
-        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
-        res = self.client.get_by_phone(phone)
+    def test_by_email(self):
+        email = 'demo@nextcaller.com'
+        self.patch_http_request(EMAIL_JSON_RESULT_EXAMPLE)
+        res = self.client.get_by_email(email)
         self.assertTrue(res['records'])
-        self.assertEqual(res['records'][0]['email'], 'demo@nextcaller.com')
         self.assertEqual(res['records'][0]['first_name'], 'Jerry')
         self.assertEqual(res['records'][0]['last_name'], 'Seinfeld')
+        self.assertEqual(res['records'][0]['language'], 'English')
 
 
-class PlatformPhoneTestCase(BasePlatformTestCase):
+class PlatformEmailTestCase(BasePlatformTestCase):
 
-    def test_by_wrong_argument(self):
-        phone = '1231231231'
-        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
-        self.assertRaises(ValueError, self.client.get_by_phone, phone,
-                          self.account_id, x='xx')
-
-    def test_by_phone(self):
-        phone = '2125558383'
-        self.patch_http_request(PHONE_JSON_RESULT_EXAMPLE)
-        res = self.client.get_by_phone(phone, self.account_id)
+    def test_by_email(self):
+        email = 'demo@nextcaller.com'
+        self.patch_http_request(EMAIL_JSON_RESULT_EXAMPLE)
+        res = self.client.get_by_email(email, self.account_id)
         self.assertTrue(res['records'])
-        self.assertEqual(res['records'][0]['email'], 'demo@nextcaller.com')
         self.assertEqual(res['records'][0]['first_name'], 'Jerry')
         self.assertEqual(res['records'][0]['last_name'], 'Seinfeld')
+        self.assertEqual(res['records'][0]['language'], 'English')
 
 
 if __name__ == '__main__':

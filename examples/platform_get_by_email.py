@@ -13,15 +13,15 @@ handler.setFormatter(formatter)
 username = 'XXXXX'
 password = 'XXXXX'
 sandbox = True
-profile_id = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+email = 'demo@nextcaller.com'
 account_id = 'test'
 
 client = NextCallerPlatformClient(username, password, sandbox=sandbox)
 
-# update by profile id
+# get by email
 try:
-    data = {'email': 'test@test.com'}
-    client.update_by_profile_id(profile_id, data, account_id)
+    response_content = client.get_by_email(email, account_id)
+    logger.info(response_content)
 except HttpException as err:
     logger.error(
         'Response message: {}'.format(err.message),

@@ -8,23 +8,18 @@ from .transport import make_http_request
 class NextCallerClient(object):
     """The NextCaller API client"""
 
-    def __init__(self, username, password, version=DEFAULT_API_VERSION,
-                 sandbox=False, debug=False):
+    def __init__(self, username, password, sandbox=False):
         """
         Initialize NextCaller client with API username
         and password for Basic Authorization
 
         :param username:str     API username
         :param password:str     API password
-        :param version:str      API version
         :param sandbox:bool     If True - sandbox mode is turned on
-        :param debug:bool       If True - all actions will be reflected
-                                in console output
         """
         self.auth = BasicAuth(username, password)
         self.sandbox = bool(sandbox)
-        self.base_url = prepare_base_url(sandbox, version)
-        self.debug = debug
+        self.base_url = prepare_base_url(sandbox)
 
     @check_kwargs
     def get_by_phone(self, phone, **kwargs):
@@ -36,14 +31,12 @@ class NextCallerClient(object):
 
         :return:list        Serialised response as list
         """
-        validate_phone(phone)
         url_params = dict({
             'phone': phone,
             'format': JSON_RESPONSE_FORMAT,
         }, **kwargs)
         url = prepare_url(self.base_url, 'records/', url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug)
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
     @check_kwargs
@@ -57,35 +50,48 @@ class NextCallerClient(object):
 
         :return:dict            Serialised response as dictionary
         """
-        validate_profile_id(profile_id)
         url_params = dict({
             'format': JSON_RESPONSE_FORMAT
         }, **kwargs)
         url = prepare_url(self.base_url, 'users/{0}/'.format(profile_id),
                           url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug)
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
     @check_kwargs
-    def get_by_address_name(self, data, **kwargs):
+    def get_by_name_address(self, data, **kwargs):
         """
         Get profile by an address
 
-        :param data:dict        Profile identifier from get_by_phone
-                                response with length in 30 symbols
+        :param data:dict        Dictionary with address and name data for search
         :param kwargs:dict      Additional params for request
 
         :return:dict            Serialised response as dictionary
         """
-        clean_data = validate_address(data)
-        clean_data.update(kwargs)
+        data.update(kwargs)
         url_params = dict({
             'format': JSON_RESPONSE_FORMAT
-        }, **clean_data)
+        }, **data)
         url = prepare_url(self.base_url, 'records/', url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug)
+        response = make_http_request(self.auth, url, method='GET')
+        return default_handle_response(response)
+
+    @check_kwargs
+    def get_by_email(self, email, **kwargs):
+        """
+        Get profile by an email
+
+        :param email:str        The complete email address you want to look up a profile for
+        :param kwargs:dict      Additional params for request
+
+        :return:dict            Serialised response as dictionary
+        """
+        url_params = dict({
+            'email': email,
+            'format': JSON_RESPONSE_FORMAT
+        }, **kwargs)
+        url = prepare_url(self.base_url, 'records/', url_params=url_params)
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
     @check_kwargs
@@ -100,7 +106,6 @@ class NextCallerClient(object):
 
         :return:str             HTTP Body of response as text
         """
-        validate_profile_id(profile_id)
         url_params = dict({
             'format': JSON_RESPONSE_FORMAT
         }, **kwargs)
@@ -108,8 +113,7 @@ class NextCallerClient(object):
                           url_params=url_params)
         data = prepare_json_data(data)
         return make_http_request(
-            self.auth, url, data=data, method='POST',
-            content_type=JSON_CONTENT_TYPE, debug=self.debug
+            self.auth, url, data=data, method='POST', content_type=JSON_CONTENT_TYPE
         )
 
     @check_kwargs
@@ -122,93 +126,108 @@ class NextCallerClient(object):
 
         :return:dict        Serialised response as dictionary
         """
-        validate_phone(phone)
         url_params = dict({
             'phone': phone,
             'format': JSON_RESPONSE_FORMAT,
         }, **kwargs)
         url = prepare_url(self.base_url, 'fraud/', url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug)
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
 
 class NextCallerPlatformClient(NextCallerClient):
     """The NextCaller platform API client"""
 
+    def __init__(self, username, password, sandbox=False):
+        """
+        Initialize NextCaller client with API username
+        and password for Basic Authorization
+
+        :param username:str     API username
+        :param password:str     API password
+        :param sandbox:bool     If True - sandbox mode is turned on
+        """
+        super(NextCallerPlatformClient, self).__init__(username, password, sandbox)
+        self.auth = PlatformBasicAuth(username, password)
+
     @check_kwargs
-    def get_by_phone(self, phone, platform_username, **kwargs):
+    def get_by_phone(self, phone, account_id, **kwargs):
         """
         Get profile by a phone number
 
         :param phone:str                10 digit phone number
-        :param platform_username:str    Name of platform user
+        :param account_id:str           Name of platform account
         :param kwargs:dict              Additional params for request
 
         :return:list                    Serialised response as list
         """
-        validate_platform_username(platform_username)
-        return super(NextCallerPlatformClient, self).get_by_phone(
-            phone, platform_username=platform_username, **kwargs
-        )
+        with PlatformAuthContextManager(self.auth, account_id):
+            return super(NextCallerPlatformClient, self).get_by_phone(phone, **kwargs)
 
     @check_kwargs
-    def get_by_profile_id(self, profile_id, platform_username, **kwargs):
+    def get_by_profile_id(self, profile_id, account_id, **kwargs):
         """
         Get profile by a profile id
 
         :param profile_id:str           Profile identifier from get_by_phone
                                         response with length in 30 symbols
-        :param platform_username:str    Name of platform user
+        :param account_id:str           Name of platform account
         :param kwargs:dict              Additional params for request
 
         :return:dict                    Serialised response as dictionary
         """
-        validate_platform_username(platform_username)
-        return super(NextCallerPlatformClient, self).get_by_profile_id(
-            profile_id, platform_username=platform_username, **kwargs
-        )
+        with PlatformAuthContextManager(self.auth, account_id):
+            return super(NextCallerPlatformClient, self).get_by_profile_id(profile_id, **kwargs)
 
     @check_kwargs
-    def get_by_address_name(self, data, platform_username, **kwargs):
+    def get_by_name_address(self, data, account_id, **kwargs):
         """
         Get profile by an address
 
-        :param data:dict                Profile identifier from get_by_phone
-                                        response with length in 30 symbols
-        :param platform_username:str    Name of platform user
+        :param data:dict                Dictionary with address and name data for search
+        :param account_id:str           Name of platform account
         :param kwargs:dict              Additional params for request
 
         :return:dict                    Serialised response as dictionary
         """
-        validate_platform_username(platform_username)
-        return super(NextCallerPlatformClient, self).get_by_address_name(
-            data, platform_username=platform_username, **kwargs
-        )
+        with PlatformAuthContextManager(self.auth, account_id):
+            return super(NextCallerPlatformClient, self).get_by_name_address(data, **kwargs)
+
+    @check_kwargs
+    def get_by_email(self, email, account_id, **kwargs):
+        """
+        Get profile by a email
+
+        :param email:str        The complete email address you want to look up a profile for
+        :param account_id:str   Name of platform account
+        :param kwargs:dict      Additional params for request
+
+        :return:dict            Serialised response as dictionary
+        """
+        with PlatformAuthContextManager(self.auth, account_id):
+            return super(NextCallerPlatformClient, self).get_by_email(email, **kwargs)
 
     @check_kwargs
     def update_by_profile_id(self, profile_id, data,
-                             platform_username, **kwargs):
+                             account_id, **kwargs):
         """
         Update profile by a profile id
 
         :param profile_id:str           Profile identifier from get_by_phone
                                         response with length in 30 symbols
         :param data:dict                Data to update as dictionary
-        :param platform_username:str    Name of platform user
+        :param account_id:str           Name of platform account
         :param kwargs:dict              Additional params for request
 
         :return:str                     HTTP Body of response as text
         """
-        validate_platform_username(platform_username)
-        return super(NextCallerPlatformClient, self).update_by_profile_id(
-            profile_id, data, platform_username=platform_username, **kwargs
-        )
+        with PlatformAuthContextManager(self.auth, account_id):
+            return super(NextCallerPlatformClient, self).update_by_profile_id(profile_id, data, **kwargs)
 
     def get_platform_statistics(self, page=1, **kwargs):
         """
         Get platform statistics as dictionary
-        with list of platform users
+        with list of platform accounts
 
         :param page:int     Number of page with users
         :param kwargs:dict  Additional params for request
@@ -220,62 +239,74 @@ class NextCallerPlatformClient(NextCallerClient):
             'format': JSON_RESPONSE_FORMAT,
         }, **kwargs)
         url = prepare_url(
-            self.base_url, 'platform_users/', url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug)
+            self.base_url, 'accounts/', url_params=url_params)
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
-    def get_platform_user(self, platform_username, **kwargs):
+    def get_platform_account(self, account_id, **kwargs):
         """
-        Get platform user detail data by platform username
+        Get platform account detail data by account ID
 
-        :param platform_username:str   Name of platform user
+        :param account_id:str          Name of platform account
 
-        :return:dict                   Platform user detail data
+        :return:dict                   platform account detail data
         """
-        validate_platform_username(platform_username)
         url_params = dict({
             'format': JSON_RESPONSE_FORMAT
         }, **kwargs)
-        url_path = 'platform_users/{0}/'.format(platform_username)
+        url_path = 'accounts/{0}/'.format(account_id)
         url = prepare_url(self.base_url, url_path, url_params=url_params)
-        response = make_http_request(
-            self.auth, url, method='GET', debug=self.debug)
+        response = make_http_request(self.auth, url, method='GET')
         return default_handle_response(response)
 
-    def update_platform_user(self, platform_username, data):
+    def create_platform_account(self, data):
         """
-        Update platform user data
+        Create platform account
 
-        :param platform_username:str    Name of platform user
-        :param data:dict                Data to update as dictionary
+        :param data:dict                Initial data to create new platform account as dictionary
 
         :return:str                     HTTP Body of response as text
         """
-        validate_platform_username(platform_username)
         url_params = {
             'format': JSON_RESPONSE_FORMAT
         }
         url = prepare_url(
-            self.base_url, 'platform_users/{0}/'.format(platform_username),
+            self.base_url, 'accounts/',
             url_params=url_params)
         data = prepare_json_data(data)
         return make_http_request(
-            self.auth, url, data=data, method='POST',
-            content_type=JSON_CONTENT_TYPE, debug=self.debug
+            self.auth, url, data=data, method='POST', content_type=JSON_CONTENT_TYPE
         )
 
-    def get_fraud_level(self, phone, platform_username, **kwargs):
+    def update_platform_account(self, data, account_id):
+        """
+        Update platform account data
+
+        :param data:dict                Data to update as dictionary
+        :param account_id:str           Name of platform account
+
+        :return:str                     HTTP Body of response as text
+        """
+        url_params = {
+            'format': JSON_RESPONSE_FORMAT
+        }
+        url = prepare_url(
+            self.base_url, 'accounts/{0}/'.format(account_id),
+            url_params=url_params)
+        data = prepare_json_data(data)
+        return make_http_request(
+            self.auth, url, data=data, method='PUT', content_type=JSON_CONTENT_TYPE
+        )
+
+    def get_fraud_level(self, phone, account_id, **kwargs):
         """
         Get fraud level for a phone
 
         :param phone:str                10 digit phone number
-        :param platform_username:str    Name of platform user
+        :param account_id:str           Name of platform account
         :param kwargs:dict              Additional params for request
 
         :return:dict                    Serialised response as dictionary
         """
-        validate_platform_username(platform_username)
-        return super(NextCallerPlatformClient, self).get_fraud_level(
-            phone, platform_username=platform_username, **kwargs
-        )
+        with PlatformAuthContextManager(self.auth, account_id):
+            return super(NextCallerPlatformClient, self).get_fraud_level(phone, **kwargs)

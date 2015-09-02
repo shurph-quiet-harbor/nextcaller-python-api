@@ -10,7 +10,7 @@ except (ValueError, ImportError):
     from pynextcaller.tests.base import BaseTestCase, BasePlatformTestCase
 
 
-ADDRESS_JSON_RESULT_EXAMPLE = '''
+ADDRESS_NAME_JSON_RESULT_EXAMPLE = '''
 {
     "records": [
         {
@@ -72,36 +72,7 @@ ADDRESS_JSON_RESULT_EXAMPLE = '''
 }
 '''
 
-WRONG_ADDRESS_DATA = {
-    'first_name': 'Jerry',
-    'last_name': 'Seinfeld',
-    'address': '129 West 81st Street',
-    'city': 'New York',
-}
-
-
-WRONG_ADDRESS_ZIP_DATA = {
-    'first_name': 'Jerry',
-    'last_name': 'Seinfeld',
-    'address': '129 West 81st Street',
-    'city': 'New York',
-    'state': 'NY',
-    'zip_code': '1002',
-}
-
-
-WRONG_ADDRESS_FIELDS_DATA = {
-    'first_name': 'Jerry',
-    'last_name': 'Seinfeld',
-    'address': '129 West 81st Street',
-    'city': 'New York',
-    'state': 'NY',
-    'zip_code': '10024',
-    'test_field': 'xx',
-}
-
-
-ADDRESS_DATA = {
+ADDRESS_NAME_DATA = {
     'first_name': 'Jerry',
     'last_name': 'Seinfeld',
     'address': '129 West 81st Street',
@@ -113,24 +84,9 @@ ADDRESS_DATA = {
 
 class AddressTestCase(BaseTestCase):
 
-    def test_address_by_not_full_address(self):
-        self.patch_http_request(ADDRESS_JSON_RESULT_EXAMPLE)
-        self.assertRaises(
-            ValueError, self.client.get_by_address_name, WRONG_ADDRESS_DATA)
-
-    def test_address_by_wrong_zip(self):
-        self.patch_http_request(ADDRESS_JSON_RESULT_EXAMPLE)
-        self.assertRaises(
-            ValueError, self.client.get_by_address_name, WRONG_ADDRESS_ZIP_DATA)
-
-    def test_address_by_wrong_fields(self):
-        self.patch_http_request(ADDRESS_JSON_RESULT_EXAMPLE)
-        self.assertRaises(
-            ValueError, self.client.get_by_address_name, WRONG_ADDRESS_FIELDS_DATA)
-
     def test_by_address(self):
-        self.patch_http_request(ADDRESS_JSON_RESULT_EXAMPLE)
-        res = self.client.get_by_address_name(ADDRESS_DATA)
+        self.patch_http_request(ADDRESS_NAME_JSON_RESULT_EXAMPLE)
+        res = self.client.get_by_name_address(ADDRESS_NAME_DATA)
         self.assertTrue(res['records'])
         self.assertEqual(res['records'][0]['email'], 'demo@nextcaller.com')
         self.assertEqual(res['records'][0]['first_name'], 'Jerry')
@@ -139,27 +95,9 @@ class AddressTestCase(BaseTestCase):
 
 class PlatformAddressTestCase(BasePlatformTestCase):
 
-    def test_address_by_not_full_address(self):
-        self.patch_http_request(ADDRESS_JSON_RESULT_EXAMPLE)
-        self.assertRaises(
-            ValueError, self.client.get_by_address_name,
-            WRONG_ADDRESS_DATA, self.platform_username)
-
-    def test_address_by_wrong_zip(self):
-        self.patch_http_request(ADDRESS_JSON_RESULT_EXAMPLE)
-        self.assertRaises(
-            ValueError, self.client.get_by_address_name,
-            WRONG_ADDRESS_ZIP_DATA, self.platform_username)
-
-    def test_address_by_wrong_fields(self):
-        self.patch_http_request(ADDRESS_JSON_RESULT_EXAMPLE)
-        self.assertRaises(
-            ValueError, self.client.get_by_address_name,
-            WRONG_ADDRESS_FIELDS_DATA, self.platform_username)
-
     def test_by_address(self):
-        self.patch_http_request(ADDRESS_JSON_RESULT_EXAMPLE)
-        res = self.client.get_by_address_name(ADDRESS_DATA, self.platform_username)
+        self.patch_http_request(ADDRESS_NAME_JSON_RESULT_EXAMPLE)
+        res = self.client.get_by_name_address(ADDRESS_NAME_DATA, self.account_id)
         self.assertTrue(res['records'])
         self.assertEqual(res['records'][0]['email'], 'demo@nextcaller.com')
         self.assertEqual(res['records'][0]['first_name'], 'Jerry')

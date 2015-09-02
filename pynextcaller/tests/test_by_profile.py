@@ -142,7 +142,7 @@ class PlatformProfileTestCase(BasePlatformTestCase):
     def test_profile_get_request(self):
         profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
         self.patch_http_request(PROFILE_JSON_RESULT_EXAMPLE)
-        res = self.client.get_by_profile_id(profile_id, self.platform_username)
+        res = self.client.get_by_profile_id(profile_id, self.account_id)
         self.assertEqual(res['email'], 'demo@nextcaller.com')
         self.assertEqual(res['first_name'], 'Jerry')
         self.assertEqual(res['last_name'], 'Seinfeld')
@@ -151,7 +151,7 @@ class PlatformProfileTestCase(BasePlatformTestCase):
         profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
         self.patch_http_request(self.fake_response)
         res = self.client.update_by_profile_id(
-            profile_id, PROFILE_JSON_REQUEST_EXAMPLE, self.platform_username)
+            profile_id, PROFILE_JSON_REQUEST_EXAMPLE, self.account_id)
         self.assertEqual(res.status_code, 204)
 
     def test_profile_update_wrong_request(self):
@@ -162,7 +162,7 @@ class PlatformProfileTestCase(BasePlatformTestCase):
         self.patch_http_request(fake_response)
         res = self.client.update_by_profile_id(
             profile_id, PROFILE_JSON_WRONG_REQUEST_EXAMPLE,
-            self.platform_username)
+            self.account_id)
         self.assertEqual(res.status_code, 400)
         self.assertEqual(
             json.loads(res.content)['error']['description']['email'][0],

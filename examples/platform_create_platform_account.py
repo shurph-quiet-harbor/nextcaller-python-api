@@ -2,6 +2,7 @@ import logging
 from pynextcaller.client import NextCallerPlatformClient
 from pynextcaller.exceptions import HttpException
 
+
 logger = logging.getLogger('nextcaller')
 handler = logging.StreamHandler()
 logger.addHandler(handler)
@@ -13,15 +14,18 @@ handler.setFormatter(formatter)
 username = 'XXXXX'
 password = 'XXXXX'
 sandbox = True
-profile_id = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-account_id = 'test'
 
 client = NextCallerPlatformClient(username, password, sandbox=sandbox)
 
-# update by profile id
 try:
-    data = {'email': 'test@test.com'}
-    client.update_by_profile_id(profile_id, data, account_id)
+    data = {
+        'id': 'test_username',
+        'first_name': 'Clark',
+        'last_name': 'Kent',
+        'email': 'test@test.com'
+    }
+    response_content = client.create_platform_account(data)
+    logger.info(response_content)
 except HttpException as err:
     logger.error(
         'Response message: {}'.format(err.message),
