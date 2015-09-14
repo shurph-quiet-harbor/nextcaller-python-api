@@ -151,7 +151,7 @@ class NextCallerPlatformClient(NextCallerClient):
         self.auth = PlatformBasicAuth(username, password)
 
     @check_kwargs
-    def get_by_phone(self, phone, account_id, **kwargs):
+    def get_by_phone(self, phone, account_id=DEFAULT_PLATFORM_ACCOUNT_ID, **kwargs):
         """
         Get profile by a phone number
 
@@ -165,7 +165,7 @@ class NextCallerPlatformClient(NextCallerClient):
             return super(NextCallerPlatformClient, self).get_by_phone(phone, **kwargs)
 
     @check_kwargs
-    def get_by_profile_id(self, profile_id, account_id, **kwargs):
+    def get_by_profile_id(self, profile_id, account_id=DEFAULT_PLATFORM_ACCOUNT_ID, **kwargs):
         """
         Get profile by a profile id
 
@@ -180,7 +180,7 @@ class NextCallerPlatformClient(NextCallerClient):
             return super(NextCallerPlatformClient, self).get_by_profile_id(profile_id, **kwargs)
 
     @check_kwargs
-    def get_by_name_address(self, data, account_id, **kwargs):
+    def get_by_name_address(self, data, account_id=DEFAULT_PLATFORM_ACCOUNT_ID, **kwargs):
         """
         Get profile by an address
 
@@ -194,7 +194,7 @@ class NextCallerPlatformClient(NextCallerClient):
             return super(NextCallerPlatformClient, self).get_by_name_address(data, **kwargs)
 
     @check_kwargs
-    def get_by_email(self, email, account_id, **kwargs):
+    def get_by_email(self, email, account_id=DEFAULT_PLATFORM_ACCOUNT_ID, **kwargs):
         """
         Get profile by a email
 
@@ -208,8 +208,7 @@ class NextCallerPlatformClient(NextCallerClient):
             return super(NextCallerPlatformClient, self).get_by_email(email, **kwargs)
 
     @check_kwargs
-    def update_by_profile_id(self, profile_id, data,
-                             account_id, **kwargs):
+    def update_by_profile_id(self, profile_id, data, account_id=DEFAULT_PLATFORM_ACCOUNT_ID, **kwargs):
         """
         Update profile by a profile id
 
@@ -298,7 +297,7 @@ class NextCallerPlatformClient(NextCallerClient):
             self.auth, url, data=data, method='PUT', content_type=JSON_CONTENT_TYPE
         )
 
-    def get_fraud_level(self, phone, account_id, **kwargs):
+    def get_fraud_level(self, phone, account_id=DEFAULT_PLATFORM_ACCOUNT_ID, **kwargs):
         """
         Get fraud level for a phone
 
