@@ -120,7 +120,7 @@ class ProfileTestCase(BaseTestCase):
         profile_id = '97d949a413f4ea8b85e9586e1f2d9a'
         self.patch_http_request(self.fake_response)
         res = self.client.update_by_profile_id(
-            profile_id, data=PROFILE_JSON_REQUEST_EXAMPLE)
+            profile_id, PROFILE_JSON_REQUEST_EXAMPLE)
         self.assertEqual(res.status_code, 204)
 
     def test_profile_update_wrong_request(self):
@@ -130,7 +130,7 @@ class ProfileTestCase(BaseTestCase):
         fake_response.content = PROFILE_JSON_WRONG_RESULT
         self.patch_http_request(fake_response)
         res = self.client.update_by_profile_id(
-            profile_id, data=PROFILE_JSON_WRONG_REQUEST_EXAMPLE)
+            profile_id, PROFILE_JSON_WRONG_REQUEST_EXAMPLE)
         self.assertEqual(res.status_code, 400)
         self.assertEqual(
             json.loads(res.content)['error']['description']['email'][0],

@@ -170,7 +170,7 @@ class PlatformTestCase(BasePlatformTestCase):
         fake_response.status_code = 400
         fake_response.content = PLATFORM_ACCOUNT_CREATE_WRONG_RESULT
         self.patch_http_request(fake_response)
-        res = self.client.create_platform_account(PLATFORM_ACCOUNT_UPDATE_WRONG_JSON_REQUEST_EXAMPLE)
+        res = self.client.create_platform_account(PLATFORM_ACCOUNT_CREATE_WRONG_JSON_REQUEST_EXAMPLE)
         self.assertEqual(res.status_code, 400)
         self.assertEqual(
             json.loads(res.content)['error']['description']['id'][0], 'This field cannot be blank.'
