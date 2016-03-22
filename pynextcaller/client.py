@@ -116,24 +116,6 @@ class NextCallerClient(object):
             self.auth, url, data=profile_data, method='POST', content_type=JSON_CONTENT_TYPE
         )
 
-    @check_kwargs
-    def get_fraud_level(self, phone, **kwargs):
-        """
-        Get fraud level for a phone number
-
-        :param phone:str    10 digit phone number
-        :param kwargs:dict  Additional params for request
-
-        :return:dict        Serialised response as dictionary
-        """
-        url_params = dict({
-            'phone': phone,
-            'format': JSON_RESPONSE_FORMAT,
-        }, **kwargs)
-        url = prepare_url(self.base_url, 'fraud/', url_params=url_params)
-        response = make_http_request(self.auth, url, method='GET')
-        return default_handle_response(response)
-
 
 class NextCallerPlatformClient(NextCallerClient):
     """The NextCaller platform API client"""
@@ -296,16 +278,3 @@ class NextCallerPlatformClient(NextCallerClient):
         return make_http_request(
             self.auth, url, data=account_data, method='PUT', content_type=JSON_CONTENT_TYPE
         )
-
-    def get_fraud_level(self, phone, account_id=DEFAULT_PLATFORM_ACCOUNT_ID, **kwargs):
-        """
-        Get fraud level for a phone
-
-        :param phone:str                10 digit phone number
-        :param account_id:str           Name of platform account
-        :param kwargs:dict              Additional params for request
-
-        :return:dict                    Serialised response as dictionary
-        """
-        with PlatformAuthContextManager(self.auth, account_id):
-            return super(NextCallerPlatformClient, self).get_fraud_level(phone, **kwargs)

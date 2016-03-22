@@ -39,8 +39,6 @@ PROFILE_JSON_RESULT_EXAMPLE = '''
     "last_name": "Seinfeld",
     "name": "Jerry Seinfeld",
     "language": "English",
-    "fraud_threat": "low",
-    "spoof": "false",
     "phone": [
         {
             "number": "2125558383",
